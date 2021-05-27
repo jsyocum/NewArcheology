@@ -1,0 +1,108 @@
+﻿<Window x:Class="ArchHelper2.DebugConsole"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArchHelper2"
+        mc:Ignorable="d" FontSize="14" FontFamily="Consolas"
+        Title="DebugConsole" Height="600" Width="1000" Background="#FF161515">
+   
+    
+    <Window.Resources>
+        <ControlTemplate x:Key="ScrollViewerHorizontalOnTopTemplate" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="17"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" 
+                    Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+                    Grid.Column="1" Grid.Row="0"/>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Grid.Column="0" Grid.Row="1" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False"/>
+                <ScrollBar x:Name="PART_VerticalScrollBar" 
+                    Cursor="Arrow" 
+                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" 
+                    Grid.Column="1" Grid.Row="1" 
+                    AutomationProperties.AutomationId="VerticalScrollBar" 
+                    Maximum="{TemplateBinding ScrollableHeight}" 
+                    Minimum="0" 
+                    Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                    ViewportSize="{TemplateBinding ViewportHeight}"/>
+                <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                    Cursor="Arrow" 
+                    Grid.Column="0" 
+                    AutomationProperties.AutomationId="HorizontalScrollBar" 
+                    Maximum="{TemplateBinding ScrollableWidth}" 
+                    Minimum="0" 
+                    Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                    Orientation="Horizontal" 
+                    ViewportSize="{TemplateBinding ViewportWidth}"/>
+            </Grid>
+        </ControlTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+
+        <ScrollViewer Grid.Row="0" x:Name="debugScrollViewer" Template="{StaticResource ScrollViewerHorizontalOnTopTemplate}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" MouseLeftButtonUp="debugScrollViewer_MouseLeftButtonUp" PreviewKeyDown="debugScrollViewer_PreviewKeyDown"  >
+            <ItemsControl x:Name="debugStack" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,3,0,3" >
+                            <TextBlock Text=">> " Foreground="#FF175390"  />
+                            <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" TextWrapping="Wrap"
+                                     Text="{Binding Path=.}" Foreground="#FF1B9B1B" >
+                                <TextBox.SelectionBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1.2" StartPoint="0.5,0">
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="White" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </TextBox.SelectionBrush>
+                            </TextBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="100*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                       Text=">> " Foreground="#FF175390" />
+            <TextBox Grid.Column="1" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0"
+                     x:Name="UserInput" Foreground="#FF1B9B1B" PreviewKeyDown="UserInput_PreviewKeyDown" TextChanged="UserInput_TextChanged" >
+                <TextBox.SelectionBrush>
+                    <LinearGradientBrush EndPoint="0.5,1.2" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TextBox.SelectionBrush>
+                <TextBox.CaretBrush>
+                    <LinearGradientBrush EndPoint="0.5,0.5" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TextBox.CaretBrush>
+            </TextBox>
+        </Grid>
+
+    </Grid>
+</Window>

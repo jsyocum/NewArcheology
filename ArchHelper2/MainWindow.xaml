@@ -1,0 +1,293 @@
+﻿<Window x:Class="ArchHelper2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArchHelper2"
+        mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
+        Title="ArchHelper -- BETA 1.1.2" Height="800" Width="1200">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="25*" />
+            <ColumnDefinition Width="25*" />
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="30*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <!-- Column 1 -->
+        
+        <!-- Title -->
+
+        <TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0,20,20" 
+                   x:Name="Title" Text="ArchHelper" FontSize="40" />
+
+        <!-- Artefact additions -->
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,0,20,10"
+                 x:Name="ArtefactTextBox" TextChanged="ArtefactTextBox_TextChanged" PreviewKeyDown="ArtefactTextBox_PreviewKeyDown" />
+        <TextBlock Grid.Column="1" Grid.Row="2" Margin="5,0,20,10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Search artefacts to add" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="ArtefactTextBlock" IsHitTestVisible="False"/>
+        <ListBox Grid.Column="1" Grid.Row="3" Margin="0,0,20,10" FontSize="15"
+                 x:Name="ArtefactListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactListBox_PreviewMouseRightButtonUp" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding arteName}" Margin="3" />
+                        <StackPanel.ToolTip>
+                            <ToolTip Content="{Binding experience}"
+                                     ContentStringFormat='Experience gained by restoring one of these: {0}'/>
+                        </StackPanel.ToolTip>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Select all"
+                              x:Name="ArtefactListBoxSelectAll" PreviewMouseLeftButtonDown="ArtefactListBoxSelectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Unselect all" 
+                              x:Name="ArtefactListBoxUnselectAll" PreviewMouseLeftButtonDown="ArtefactListBoxUnselectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Go to wiki"
+                              x:Name="ArtefactListBoxWiki" PreviewMouseLeftButtonDown="ArtefactListBoxWiki_PreviewMouseLeftButtonDown" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+        <Grid Grid.Column="1" Grid.Row="4" Margin="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Margin="0,0,10,20" 
+                     x:Name="ArtefactAddBox" PreviewKeyDown="ArtefactAddBox_PreviewKeyDown" TextChanged="ArtefactAddBox_TextChanged" PreviewMouseRightButtonUp="ArtefactAddBox_PreviewMouseRightButtonUp" >
+                <TextBox.ToolTip>
+                    <ToolTip Content="Decide how many of each selected item you want restored" />
+                </TextBox.ToolTip>
+            </TextBox>
+            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="ArtefactAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
+            <Button Grid.Column="1" Margin="0,0,0,20" 
+                    x:Name="ArtefactAddButton" Content="Add" Click="ArtefactAddButton_Click" />
+        </Grid>
+        
+        <!-- Material additions-->
+        <TextBox Grid.Column="1" Grid.Row="5" Margin="0,0,20,10"
+                 x:Name="MaterialSearchBox" TextChanged="MaterialSearchBox_TextChanged" />
+        <TextBlock Grid.Column="1" Grid.Row="5" Margin="5,0,20,10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Search materials to add" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="MaterialSearchBlock" IsHitTestVisible="False"/>
+        <ListBox Grid.Column="1" Grid.Row="6" Margin="0,0,20,10" FontSize="15"
+                 x:Name="MaterialListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialListBox_PreviewMouseRightButtonUp" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ItemName}" Margin="3" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Select all"
+                              x:Name="MaterialListBoxSelectAll" PreviewMouseLeftButtonDown="MaterialListBoxSelectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Unselect all" 
+                              x:Name="MaterialListBoxUnselectAll" PreviewMouseLeftButtonDown="MaterialListBoxUnselectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Go to wiki"
+                              x:Name="MaterialListBoxWiki" PreviewMouseLeftButtonDown="MaterialListBoxWiki_PreviewMouseLeftButtonDown" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+        
+        <Grid Grid.Column="1" Grid.Row="7" Margin="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Margin="0,0,10,20"
+                     x:Name="MaterialAddBox" PreviewKeyDown="MaterialAddBox_PreviewKeyDown" TextChanged="MaterialAddBox_TextChanged" PreviewMouseRightButtonUp="MaterialAddBox_PreviewMouseRightButtonUp" >
+                <TextBox.ToolTip>
+                    <ToolTip Content="Input how many of each material you already have" />
+                </TextBox.ToolTip>
+            </TextBox>
+            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="MaterialAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
+            <Button Grid.Column="1" Margin="0,0,0,20" 
+                    x:Name="MaterialAddButton" Content="Add" Click="MaterialAddButton_Click" />
+        </Grid>
+        
+        <!-- Column 2 -->
+        
+        <!-- Import artefacts -->
+        <Grid Grid.Column="2" Grid.Row="1" Margin="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Margin="0,0,10,0" Height="28" VerticalAlignment="Center" 
+                     x:Name="ImportArtefactsTextBox" IsReadOnly="True" TextChanged="ImportArtefactsTextBox_TextChanged" />
+            <TextBlock Grid.Column="0" Margin="5,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Select application folder" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="ImportArtefactsTextBlock" IsHitTestVisible="False"/>
+            <Button Grid.Column="1" Height="28" VerticalAlignment="Center"
+                    x:Name="ImportArtefacts" Content=" ... " Click="ImportArtefacts_Click" />
+
+        </Grid>
+
+        <!-- Artefacts added -->
+        <TextBox Grid.Column="2" Grid.Row="2" Margin="0,0,20,10" 
+                 x:Name="ArtefactRemoveSearchBox" TextChanged="ArtefactRemoveSearchBox_TextChanged" />
+        <TextBlock Grid.Column="2" Grid.Row="2" Margin="5,0,20,10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Search added artefacts" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="ArtefactRemoveSearchBlock" IsHitTestVisible="False"/>
+        
+        <ListBox Grid.Column="2" Grid.Row="3" Margin="0,0,20,10" FontSize="15"
+                 x:Name="ArtefactsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactsAddedListBox_PreviewMouseRightButtonUp" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding amountNeeded}" Margin="3" />
+                        <TextBlock Text="{Binding arteName}" Margin="3"/>
+                        <StackPanel.ToolTip>
+                            <ToolTip Content="{Binding experienceToolTip}" />
+                        </StackPanel.ToolTip>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Select all"
+                              x:Name="ArtefactsAddedBoxSelectAll" PreviewMouseLeftButtonDown="ArtefactsAddedBoxSelectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Unselect all" 
+                              x:Name="ArtefactsAddedBoxUnselectAll" PreviewMouseLeftButtonDown="ArtefactsAddedBoxUnselectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Go to wiki"
+                              x:Name="ArtefactsAddedBoxWiki" PreviewMouseLeftButtonDown="ArtefactsAddedBoxWiki_PreviewMouseLeftButtonDown" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <Grid Grid.Column="2" Grid.Row="4" Margin="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Margin="0,0,10,20" 
+                     x:Name="ArtefactRemoveBox" PreviewKeyDown="ArtefactRemoveBox_PreviewKeyDown" TextChanged="ArtefactRemoveBox_TextChanged" PreviewMouseRightButtonUp="ArtefactRemoveBox_PreviewMouseRightButtonUp" >
+                <TextBox.ToolTip>
+                    <ToolTip Content="Change the amount of an artefact you want restored" />
+                </TextBox.ToolTip>
+            </TextBox>
+            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="ArtefactAmountRemoveTextBlock" IsHitTestVisible="False" />
+            <Button Grid.Column="1" Margin="0,0,0,20" 
+                    x:Name="ArtefactRemoveButton" Content="Remove" Click="ArtefactRemoveButton_Click" />
+            <Button Grid.Column="1" Margin="0,0,0,20"
+                    x:Name="ArtefactChangeButton" Content="Change" Visibility="Hidden" Click="ArtefactChangeButton_Click" />
+        </Grid>
+
+        <!-- Materials added -->
+        <TextBox Grid.Column="2" Grid.Row="5" Margin="0,0,20,10"
+                 x:Name="MaterialRemoveSearchBox" TextChanged="MaterialRemoveSearchBox_TextChanged" />
+        <TextBlock Grid.Column="2" Grid.Row="5" Margin="5,0,20,10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Search added materials" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="MaterialRemoveSearchBlock" IsHitTestVisible="False"/>
+
+        <ListBox Grid.Column="2" Grid.Row="6" Margin="0,0,20,10" FontSize="15"
+                 x:Name="MaterialsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialsAddedListBox_PreviewMouseRightButtonUp" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ItemAmount}" Margin="3" />
+                        <TextBlock Text="{Binding ItemName}" Margin="3"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Select all"
+                              x:Name="MaterialsAddedListBoxSelectAll" PreviewMouseLeftButtonDown="MaterialsAddedListBoxSelectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Unselect all" 
+                              x:Name="MaterialsAddedListBoxUnselectAll" PreviewMouseLeftButtonDown="MaterialsAddedListBoxUnselectAll_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Go to wiki"
+                              x:Name="MaterialsAddedBoxWiki" PreviewMouseLeftButtonDown="MaterialsAddedBoxWiki_PreviewMouseLeftButtonDown" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <Grid Grid.Column="2" Grid.Row="7" Margin="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Margin="0,0,10,20" 
+                     x:Name="MaterialRemoveBox" PreviewKeyDown="MaterialRemoveBox_PreviewKeyDown" TextChanged="MaterialRemoveBox_TextChanged" PreviewMouseRightButtonUp="MaterialRemoveBox_PreviewMouseRightButtonUp" >
+                <TextBox.ToolTip>
+                    <ToolTip Content="Change the amount of a material you have" />
+                </TextBox.ToolTip>
+            </TextBox>
+            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="MaterialAmountRemoveTextBlock" IsHitTestVisible="False" />
+            <Button Grid.Column="1" Margin="0,0,0,20" 
+                    x:Name="MaterialRemoveButton" Content="Remove" Click="MaterialRemoveButton_Click" />
+            <Button Grid.Column="1" Margin="0,0,0,20"
+                    x:Name="MaterialChangeButton" Content="Change" Visibility="Hidden" Click="MaterialChangeButton_Click" />
+        </Grid>
+
+        <!-- Column 3 -->
+        
+        <!-- Materials required -->
+        
+        <TextBox Grid.Column="3" Grid.Row="2" Margin="0,0,20,10" 
+                 x:Name="MaterialsRequiredSearchBox" TextChanged="MaterialsRequiredSearchBox_TextChanged" />
+        <TextBlock Grid.Column="3" Grid.Row="2" Margin="5,0,20,10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Text="Search req. materials" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                   x:Name="MaterialsRequiredSearchBlock" IsHitTestVisible="False"/>
+
+        
+        <Grid Grid.Column="3" Grid.Row="3" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ListBox Grid.Column="3" Grid.Row="3" Grid.RowSpan="4" Margin="0,0,20,10" FontSize="15"
+                 x:Name="MaterialsRequiredListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialsRequiredListBox_PreviewMouseRightButtonDown" PreviewKeyDown="MaterialsRequiredListBox_PreviewKeyDown" PreviewMouseLeftButtonUp="MaterialsRequiredListBox_PreviewMouseLeftButtonUp" PreviewMouseRightButtonUp="MaterialsRequiredListBox_PreviewMouseRightButtonUp" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="{Binding ItemAmount}" Margin="3" />
+                            <TextBlock Text="{Binding ItemName}" Margin="3"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Go to wiki"
+                                  x:Name="MaterialsRequiredBoxWiki" PreviewMouseLeftButtonDown="MaterialsRequiredBoxWiki_PreviewMouseLeftButtonDown" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Grid>
+        
+    </Grid>
+</Window>
