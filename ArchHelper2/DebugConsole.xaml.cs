@@ -259,8 +259,9 @@ namespace ArchHelper2
                         break;
 
                     case "save":
-                        string savePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
-                        Save(savePath, artefactsAddedListBox, materialsAddedListBox);
+                        string savePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+                        Save(savePath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved, 
+                            materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
 
                         PopulateDebugConsole("Attempted to save to: " + savePath);
 
@@ -268,8 +269,9 @@ namespace ArchHelper2
                         break;
 
                     case "load":
-                        string loadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
-                        Load(loadPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, allArtefacts, allMaterials);
+                        string loadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+                        Load(loadPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactUpButton, artefactDownButton,
+                                materialUpButton, materialDownButton, allArtefacts, allMaterials);
 
                         PopulateDebugConsole("Attempted to load from: " + loadPath);
 

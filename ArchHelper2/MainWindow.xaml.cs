@@ -105,15 +105,17 @@ namespace ArchHelper2
         //Declaring Artefact ListBox stuff
         public static ListBox artefactListBox = new ListBox();
         public static ListBox artefactsAddedListBox = new ListBox();
+        public static Button artefactUpButton = new Button();
+        public static Button artefactDownButton = new Button();
 
         List<artefact> artefactListBoxItemsRemoved = new List<artefact>();
         List<artefact> artefactListBoxSelectedItemsRemoved = new List<artefact>();
         List<artefact> artefactListBoxSelectedItemsTrackedBefore = new List<artefact>();
         artefact artefactListBoxRightClicked = new artefact();
 
-        List<artefact> artefactAddBoxItemsRemoved = new List<artefact>();
-        List<artefact> artefactAddBoxSelectedItemsRemoved = new List<artefact>();
-        List<artefact> artefactAddBoxSelectedItemsTrackedBefore = new List<artefact>();
+        public static List <artefact> artefactAddBoxItemsRemoved = new List<artefact>();
+        public static List <artefact> artefactAddBoxSelectedItemsRemoved = new List<artefact>();
+        public static List <artefact> artefactAddBoxSelectedItemsTrackedBefore = new List<artefact>();
         artefact artefactAddBoxRightClicked = new artefact();
 
         //Declaring allMaterial stuff
@@ -124,22 +126,32 @@ namespace ArchHelper2
         //Declaring Material ListBox stuff
         public static ListBox materialListBox = new ListBox();
         public static ListBox materialsAddedListBox = new ListBox();
+        public static Button materialUpButton = new Button();
+        public static Button materialDownButton = new Button();
 
-        List<listBoxItem> materialListBoxItemsRemoved = new List<listBoxItem>();
+        public static List<listBoxItem> materialListBoxItemsRemoved = new List<listBoxItem>();
         List<listBoxItem> materialListBoxSelectedItemsRemoved = new List<listBoxItem>();
         List<listBoxItem> materialListBoxSelectedItemsTrackedBefore = new List<listBoxItem>();
         listBoxItem materialListBoxRightClicked = new listBoxItem();
 
-        List<listBoxItem> materialAddBoxItemsRemoved = new List<listBoxItem>();
-        List<listBoxItem> materialAddBoxSelectedItemsRemoved = new List<listBoxItem>();
-        List<listBoxItem> materialAddBoxSelectedItemsTrackedBefore = new List<listBoxItem>();
+        public static List<listBoxItem> materialAddBoxItemsRemoved = new List<listBoxItem>();
+        public static List<listBoxItem> materialAddBoxSelectedItemsRemoved = new List<listBoxItem>();
+        public static List<listBoxItem> materialAddBoxSelectedItemsTrackedBefore = new List<listBoxItem>();
         listBoxItem materialAddBoxRightClicked = new listBoxItem();
 
         //Declaring MaterialsRequired ListBox stuff
-        List<listBoxItem> materialsRequiredListBoxItemsRemoved = new List<listBoxItem>();
-        List<listBoxItem> materialsRequiredListBoxItemsEnough = new List<listBoxItem>();
+        public static ListBox materialsRequiredListBox = new ListBox();
+        public static List<listBoxItem> materialsRequiredListBoxItemsRemoved = new List<listBoxItem>();
+        public static List<listBoxItem> materialsRequiredListBoxItemsEnough = new List<listBoxItem>();
         List<listBoxItem> materialsRequiredListBoxSelectedItemsTrackedBefore = new List<listBoxItem>();
         listBoxItem materialsRequiredListBoxRightClicked = new listBoxItem();
+
+        //Declaring search boxes
+        public static TextBox artefactTextBox = new TextBox();
+        public static TextBox artefactRemoveSearchBox = new TextBox();
+        public static TextBox materialSearchBox = new TextBox();
+        public static TextBox materialRemoveSearchBox = new TextBox();
+        public static TextBox materialsRequiredSearchBox = new TextBox();
 
         public MainWindow()
         {
@@ -150,17 +162,39 @@ namespace ArchHelper2
             artefactsAddedListBox = ArtefactsAddedListBox;
             materialListBox = MaterialListBox;
             materialsAddedListBox = MaterialsAddedListBox;
+            materialsRequiredListBox = MaterialsRequiredListBox;
+
+            artefactTextBox = ArtefactTextBox;
+            artefactRemoveSearchBox = ArtefactRemoveSearchBox;
+            materialSearchBox = MaterialSearchBox;
+            materialRemoveSearchBox = MaterialRemoveSearchBox;
+            materialsRequiredSearchBox = MaterialsRequiredSearchBox;
+
+            artefactUpButton = ArtefactUpButton;
+            artefactDownButton = ArtefactDownButton;
+            materialUpButton = MaterialUpButton;
+            materialDownButton = MaterialDownButton;
 
             ArtefactAddBox.Text = "1";
             MaterialAddBox.Text = "1";
+            ImportArtefactsTextBox.Text = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
 
             allArtefacts = allArtefactsHardCoded;
             BuildListBoxes(allArtefacts);
 
             allMaterials = allMaterialsHardCoded;
             BuildListBoxes(allMaterials);
+
+            Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactUpButton, artefactDownButton,
+                materialUpButton, materialDownButton, allArtefacts, allMaterials);
         }
 
+
+        public static void GetRequiredMaterialsMain()
+        {
+            GetRequiredMaterials(artefactsAddedListBox, materialsAddedListBox, materialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
+                                 materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+        }
 
         ///////////////////Importing artefacts and materials stuff///////////////////
 
@@ -174,7 +208,24 @@ namespace ArchHelper2
         private void ImportArtefacts_Click(object sender, RoutedEventArgs e)
         {
             SelectFolder(ref appFolderPath);
-            ImportArtefactsTextBox.Text = appFolderPath;
+            if(appFolderPath != "")
+            {
+                ImportArtefactsTextBox.Text = appFolderPath;
+            }
+        }
+
+        //SaveButton
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+                            materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+        }
+
+        //LoadButton
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactUpButton, artefactDownButton,
+                    materialUpButton, materialDownButton, allArtefacts, allMaterials);
         }
 
         ///////////////////Artefact ListBox Stuff///////////////////
@@ -351,6 +402,10 @@ namespace ArchHelper2
         {
             ListBoxUpOrDownButton<artefact>(true, ArtefactsAddedListBox);
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, null);
+
+            GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
+                                 materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+            FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
         }
 
         //ArtefactDownButton
@@ -358,6 +413,10 @@ namespace ArchHelper2
         {
             ListBoxUpOrDownButton<artefact>(false, ArtefactsAddedListBox);
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, null);
+
+            GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
+                                 materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+            FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
         }
 
         //ArtefactRemoveButton
@@ -548,6 +607,10 @@ namespace ArchHelper2
         {
             ListBoxUpOrDownButton<listBoxItem>(true, MaterialsAddedListBox);
             FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, null);
+
+            GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
+                                 materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+            FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
         }
 
         //MaterialDownButton
@@ -555,6 +618,10 @@ namespace ArchHelper2
         {
             ListBoxUpOrDownButton<listBoxItem>(false, MaterialsAddedListBox);
             FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, null);
+
+            GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
+                                 materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+            FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
         }
 
         //MaterialRemoveButton

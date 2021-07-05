@@ -22,7 +22,7 @@ namespace ArchHelper2
     public class CSharpHelper
     {
         /// <summary>
-        /// Changes a generic (T) variable/object's type.
+        /// Changes a generic (T) variable/object's type. Only works for structs. To convert classes, do this: "string testString = (string)(object)testStringBefore"
         /// </summary>
         /// <typeparam name="T">The generic type T (Must be of type T).</typeparam>
         /// <typeparam name="U">The type you want it changed to.</typeparam>

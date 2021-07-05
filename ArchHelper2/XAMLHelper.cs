@@ -39,6 +39,15 @@ namespace ArchHelper2
             }
         }
 
+        public static void ClearSearchBoxes()
+        {
+            artefactTextBox.Text = "";
+            artefactRemoveSearchBox.Text = "";
+            materialSearchBox.Text = "";
+            materialRemoveSearchBox.Text = "";
+            materialsRequiredSearchBox.Text = "";
+        }
+
         /// <summary>
         /// Makes a TextBox refuse input if any item in a specific ListBox is selected.
         /// </summary>
@@ -136,10 +145,14 @@ namespace ArchHelper2
             }
             else if (typeof(T) == typeof(listBoxItem))
             {
-                listBoxItem listBoxItemRightClickedToListBoxItem = ChangeType<T, listBoxItem>(listBoxItemRightClicked);
+                //listBoxItem listBoxItemRightClickedToListBoxItem = ChangeType<T, listBoxItem>(listBoxItemRightClicked);
+                listBoxItem listBoxItemRightClickedToListBoxItem = (listBoxItem)(object)listBoxItemRightClicked;
 
-                string debugLine = "(" + DateTime.Now.ToString() + ") Material right clicked: " + listBoxItemRightClickedToListBoxItem.ItemName + "; URL: " + listBoxItemRightClickedToListBoxItem.URL;
-                ConsoleWriteLine(debugLine, debugLines);
+                if (listBoxItemRightClicked != null)
+                {
+                    string debugLine = "(" + DateTime.Now.ToString() + ") Material right clicked: " + listBoxItemRightClickedToListBoxItem.ItemName + "; URL: " + listBoxItemRightClickedToListBoxItem.URL;
+                    ConsoleWriteLine(debugLine, debugLines);
+                }
             }
         }
 
@@ -536,6 +549,7 @@ namespace ArchHelper2
             materialsRequiredListBoxItemsEnough.Clear();
 
             AddItemsToListBox(materialsRequiredListBox, materialsRequired);
+            SortListBoxItems<listBoxItem>(materialsRequiredListBox);
         }
 
         /// <summary>
@@ -635,14 +649,31 @@ namespace ArchHelper2
         /// <param name="artefactListBox"></param>
         /// <param name="materialListBox"></param>
         /// <returns></returns>
-        public static void Save(string savePath, ListBox artefactListBox, ListBox materialListBox)
+        public static void Save(string appDirectoryPath, ListBox artefactListBox, ListBox materialListBox, List<artefact> artefactsRemoved, List<artefact> selectedArtefactsRemoved, List<listBoxItem> materialsRemoved, List<listBoxItem> selectedMaterialsRemoved)
         {
+            string savePath = System.IO.Path.Combine(appDirectoryPath, "SaveState\\");
+
             System.IO.Directory.CreateDirectory(savePath);
+
+            AddItemsToListBox<artefact>(artefactListBox, artefactsRemoved);
+            AddSelectedItemsToListBox<artefact>(artefactListBox, selectedArtefactsRemoved);
+
+            AddItemsToListBox<listBoxItem>(materialListBox, materialsRemoved);
+            AddSelectedItemsToListBox<listBoxItem>(materialListBox, selectedMaterialsRemoved);
+
+            SortListBoxItems<artefact>(artefactListBox);
+            SortListBoxItems<listBoxItem>(materialListBox);
+
 
             SaveSettings(savePath);
 
             SaveArtefacts(savePath, artefactListBox);
             SaveMaterials(savePath, materialListBox);
+
+
+            RemoveListBoxItemsFromListBox<artefact>(artefactListBox, artefactsRemoved);
+
+            RemoveListBoxItemsFromListBox<listBoxItem>(materialListBox, materialsRemoved);
         }
 
         /// <summary>
@@ -651,13 +682,15 @@ namespace ArchHelper2
         /// <param name="saveFolderPath"></param>
         public static void SaveSettings(string saveFolderPath)
         {
-            List<string> settings = new List<string> 
-            { 
-                new string("MainWindowHeight=" + GrabOpenWindow<MainWindow>().ActualHeight),
-                new string("MainWindowWidth=" + GrabOpenWindow<MainWindow>().ActualWidth),
-                new string("DebugConsoleHeight=" + GrabOpenWindow<DebugConsole>().ActualHeight),
-                new string("DebugConsoleWidth=" + GrabOpenWindow<DebugConsole>().ActualWidth),
-            };
+            List<string> settings = new List<string>();
+
+            settings.Add("MainWindowHeight=" + GrabOpenWindow<MainWindow>().ActualHeight);
+            settings.Add("MainWindowWidth=" + GrabOpenWindow<MainWindow>().ActualWidth);
+            if (IsWindowOpen<DebugConsole>())
+            {
+                settings.Add("DebugConsoleHeight=" + GrabOpenWindow<DebugConsole>().ActualHeight);
+                settings.Add("DebugConsoleWidth=" + GrabOpenWindow<DebugConsole>().ActualWidth);
+            }
 
             string settingsSavePath = System.IO.Path.Combine(saveFolderPath, "settings.txt");
             PrintStringsToFile(settingsSavePath, settings);
@@ -728,8 +761,12 @@ namespace ArchHelper2
         /// <param name="artefactListBox"></param>
         /// <param name="materialListBox"></param>
         /// <returns></returns>
-        public static bool Load(string loadPath, ListBox artefactListBox, ListBox artefactsAddedListBox, ListBox materialListBox, ListBox materialsAddedListBox, List<artefact> artefactsReference, List<listBoxItem> materialsReference)
+        public static bool Load(string appDirectoryPath, ListBox artefactListBox, ListBox artefactsAddedListBox, ListBox materialListBox, 
+            ListBox materialsAddedListBox, Button artefactUpButton, Button artefactDownButton, Button materialUpButton, Button materialDownButton, 
+            List<artefact> artefactsReference, List<listBoxItem> materialsReference)
         {
+            string loadPath = System.IO.Path.Combine(appDirectoryPath, "SaveState\\");
+
             if (!System.IO.Directory.Exists(loadPath))
             {
                 string defaultLoadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
@@ -737,12 +774,31 @@ namespace ArchHelper2
                 return false;
             }
 
+            artefactListBox.Items.Clear();
+            artefactsAddedListBox.Items.Clear();
+            materialListBox.Items.Clear();
+            materialsAddedListBox.Items.Clear();
+
+            ClearSearchBoxes();
+
+            BuildListBoxes(artefactsReference);
+            BuildListBoxes(materialsReference);
 
 
             LoadSettings(loadPath);
 
             LoadArtefacts(loadPath, artefactListBox, artefactsAddedListBox, artefactsReference);
-            LoadMaterials(loadPath, materialListBox, materialsReference);
+            LoadMaterials(loadPath, materialListBox, materialsAddedListBox, materialsReference);
+
+            SortListBoxItems<artefact>(artefactsAddedListBox);
+            SortListBoxItems<listBoxItem>(materialsAddedListBox);
+
+            ToggleUpDownButtons(artefactsAddedListBox, artefactUpButton, artefactDownButton);
+            ToggleUpDownButtons(materialsAddedListBox, materialUpButton, materialDownButton);
+
+            GetRequiredMaterialsMain();
+            artefactAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<artefact>(artefactsAddedListBox, 2);
+            materialAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<listBoxItem>(materialsAddedListBox, 2);
 
             return true;
         }
@@ -757,54 +813,129 @@ namespace ArchHelper2
             string artefactLoadPath = Path.Combine(loadPath, "artefactsAdded.txt");
             List<string> artefactNamesLoaded = new List<string>();
             List<int> artefactAmountsLoaded = new List<int>();
-            ParseAlternatingTextFile(artefactLoadPath, artefactNamesLoaded, artefactAmountsLoaded);
-
-            //Create and populate a list of all the actual artefacts based on their names
             List<artefact> realLoadedArtefacts = new List<artefact>();
-            foreach (string fakeArte in artefactNamesLoaded)
-            {
-                foreach (artefact arte in artefactsReference)
-                {
-                    if (fakeArte == arte.arteName)
-                    {
-                        realLoadedArtefacts.Add(arte);
-                    }
-                }
-            }
-
-            //Create another list of all the actual artefacts plus their amount needed
-            int i = 0;
             List<artefact> artefactsWithNeeded = new List<artefact>();
-            foreach (artefact arte in realLoadedArtefacts)
+            if (File.Exists(artefactLoadPath))
             {
-                artefact arteWithNeeded = arte;
-                arteWithNeeded.amountNeeded = artefactAmountsLoaded[i];
-                artefactsWithNeeded.Add(arteWithNeeded);
+                ParseAlternatingTextFile(artefactLoadPath, artefactNamesLoaded, artefactAmountsLoaded);
+
+                //Create and populate a list of all the actual artefacts based on their names
+                foreach (string fakeArte in artefactNamesLoaded)
+                {
+                    foreach (artefact arte in artefactsReference)
+                    {
+                        if (fakeArte == arte.arteName)
+                        {
+                            realLoadedArtefacts.Add(arte);
+                        }
+                    }
+                }
+
+                //Create another list of all the actual artefacts plus their amount needed
+                int i = 0;
+                foreach (artefact arte in realLoadedArtefacts)
+                {
+                    artefact arteWithNeeded = arte;
+                    arteWithNeeded.amountNeeded = artefactAmountsLoaded[i];
+                    artefactsWithNeeded.Add(arteWithNeeded);
+
+                    ++i;
+                }
             }
 
-            //Create a list of all the selected artefacts in string form
             string selectedArtefactsLoadPath = Path.Combine(loadPath, "selectedArtefactsAdded.txt");
-            List<string> fakeSelectedArtes = File.ReadAllLines(selectedArtefactsLoadPath).ToList();
             List<artefact> realSelectedArtes = new List<artefact>();
-            foreach (string fakeArte in fakeSelectedArtes)
+            if (File.Exists(selectedArtefactsLoadPath))
             {
-                foreach (artefact arte in artefactsReference)
+                //Create a list of all the selected artefacts in string form
+                List<string> fakeSelectedArtes = File.ReadAllLines(selectedArtefactsLoadPath).ToList();
+                foreach (string fakeArte in fakeSelectedArtes)
                 {
-                    if (fakeArte == arte.arteName)
+                    foreach (artefact arte in artefactsWithNeeded)
                     {
-                        realSelectedArtes.Add(arte);
+                        if (fakeArte == arte.arteName)
+                        {
+                            realSelectedArtes.Add(arte);
+                        }
                     }
                 }
             }
 
-            RemoveListBoxItemsFromListBox(listBox, artefactsWithNeeded);
-            AddItemsToListBox(addedListBox, artefactsWithNeeded);
-            AddSelectedItemsToListBox(addedListBox, realSelectedArtes);
+            if (File.Exists(artefactLoadPath))
+            {
+                RemoveListBoxItemsFromListBox(listBox, realLoadedArtefacts);
+                AddItemsToListBox(addedListBox, artefactsWithNeeded);
+            }
+            
+            if (File.Exists(selectedArtefactsLoadPath))
+            {
+                AddSelectedItemsToListBox(addedListBox, realSelectedArtes);
+            }
         }
 
-        public static void LoadMaterials(string loadPath, ListBox listBox, List<listBoxItem> materialsReference)
+        public static void LoadMaterials(string loadPath, ListBox listBox, ListBox addedListBox, List<listBoxItem> materialsReference)
         {
+            string materialLoadPath = Path.Combine(loadPath, "materialsAdded.txt");
+            List<string> materialNamesLoaded = new List<string>();
+            List<int> materialAmountsLoaded = new List<int>();
+            List<listBoxItem> realLoadedMaterials = new List<listBoxItem>();
+            List<listBoxItem> materialsWithNeeded = new List<listBoxItem>();
+            if (File.Exists(materialLoadPath))
+            {
+                ParseAlternatingTextFile(materialLoadPath, materialNamesLoaded, materialAmountsLoaded);
 
+                //Create and populate a list of all the actual artefacts based on their names
+                foreach (string fakeMat in materialNamesLoaded)
+                {
+                    foreach (listBoxItem mat in materialsReference)
+                    {
+                        if (fakeMat == mat.ItemName)
+                        {
+                            realLoadedMaterials.Add(mat);
+                        }
+                    }
+                }
+
+                //Create another list of all the actual artefacts plus their amount needed
+                int i = 0;
+                foreach (listBoxItem mat in realLoadedMaterials)
+                {
+                    listBoxItem matWithNeeded = mat;
+                    matWithNeeded.ItemAmount = materialAmountsLoaded[i];
+                    materialsWithNeeded.Add(matWithNeeded);
+
+                    ++i;
+                }
+            }
+
+            string selectedMaterialsLoadPath = Path.Combine(loadPath, "selectedMaterialsAdded.txt");
+            List<listBoxItem> realSelectedMats = new List<listBoxItem>();
+            if (File.Exists(selectedMaterialsLoadPath))
+            {
+                //Create a list of all the selected artefacts in string form
+                List<string> fakeSelectedMats = File.ReadAllLines(selectedMaterialsLoadPath).ToList();
+                foreach (string fakeMat in fakeSelectedMats)
+                {
+                    foreach (listBoxItem mat in materialsWithNeeded)
+                    {
+                        if (fakeMat == mat.ItemName)
+                        {
+                            realSelectedMats.Add(mat);
+                        }
+                    }
+                }
+            }
+
+            if (File.Exists(materialLoadPath))
+            {
+                RemoveListBoxItemsFromListBox(listBox, realLoadedMaterials);
+                AddItemsToListBox(addedListBox, materialsWithNeeded);
+            }
+
+            if (File.Exists(selectedMaterialsLoadPath))
+            {
+                AddSelectedItemsToListBox(addedListBox, realSelectedMats);
+            }
         }
 
         /// <summary>
