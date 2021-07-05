@@ -64,7 +64,8 @@ namespace ArchHelper2
         public static List<string> debugGeneral = new List<string> { "General", "false" };
         public static List<string> debugImportArtefacts = new List<string> { "ImportArtefacts", "false" };
         public static List<string> debugRightClicks = new List<string> { "RightClicks", "false" };
-        public static List<List<string>> allDebugTypes = new List<List<string>> { debugGeneral, debugImportArtefacts, debugRightClicks };
+        public static List<string> debugLoad = new List<string> { "Load", "false" };
+        public static List<List<string>> allDebugTypes = new List<List<string>> { debugGeneral, debugImportArtefacts, debugRightClicks, debugLoad };
 
         public static List<string> history = new List<string> { "history" };
         public static List<string> inputHistory = new List<string>();
@@ -212,8 +213,9 @@ namespace ArchHelper2
 
                     case "folder":
 
-                        //string allArteNamesPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper");
-                        string allArteNamesPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Imported.txt");
+                        string allArteNamesPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\Imported.txt");
+                        //string allArteNamesPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Imported.txt");
+                        PopulateDebugConsole(allArteNamesPath);
 
                         //Directory.CreateDirectory(allArteNamesPath);
 
@@ -252,6 +254,24 @@ namespace ArchHelper2
 
                     case "current":
                         PopulateDebugConsole(Directory.GetCurrentDirectory());
+
+                        knownCommand = true;
+                        break;
+
+                    case "save":
+                        string savePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
+                        Save(savePath, artefactsAddedListBox, materialsAddedListBox);
+
+                        PopulateDebugConsole("Attempted to save to: " + savePath);
+
+                        knownCommand = true;
+                        break;
+
+                    case "load":
+                        string loadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
+                        Load(loadPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, allArtefacts, allMaterials);
+
+                        PopulateDebugConsole("Attempted to load from: " + loadPath);
 
                         knownCommand = true;
                         break;

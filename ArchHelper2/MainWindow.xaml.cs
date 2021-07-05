@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static System.String;
 using System.Windows;
@@ -353,7 +354,7 @@ namespace ArchHelper2
         }
 
         //ArtefactDownButton
-        private void ArtefactDownButton_Click(object sender, RoutedEventArgs e)
+        private async void ArtefactDownButton_Click(object sender, RoutedEventArgs e)
         {
             ListBoxUpOrDownButton<artefact>(false, ArtefactsAddedListBox);
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, null);
@@ -368,6 +369,9 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
+            ArtefactRemoveBox.Text = "";
         }
 
         //ArtefactChangeButton
@@ -380,6 +384,7 @@ namespace ArchHelper2
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
 
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
             ArtefactRemoveBox.Text = "";
         }
 
@@ -561,8 +566,12 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved, 
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            ToggleUpDownButtons(MaterialsAddedListBox, MaterialUpButton, MaterialDownButton);
+            MaterialRemoveBox.Text = "";
         }
 
+        //MaterialChangeButton
         private void MaterialChangeButton_Click(object sender, RoutedEventArgs e)
         {
             ListBoxChangeAmount<listBoxItem>(MaterialsAddedListBox, MaterialRemoveBox);
@@ -572,6 +581,7 @@ namespace ArchHelper2
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
 
+            ToggleUpDownButtons(MaterialsAddedListBox, MaterialUpButton, MaterialDownButton);
             MaterialRemoveBox.Text = "";
         }
 

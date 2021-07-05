@@ -372,5 +372,31 @@ namespace ArchHelper2
 
             return fixingFilePath.ToString();
         }
+
+        /// <summary>
+        /// Prints a list of strings to a file with each string on a new line.
+        /// </summary>
+        /// <param name="filePath">The full path for the method to create and print the strings to. Must include file type. For example: "C:\Windows\test.txt"</param>
+        /// <param name="strings">The list of strings you want printed to the file.</param>
+        public static void PrintStringsToFile(string filePath, List<string> strings)
+        {  
+            using (var fs = File.Create(filePath))
+            {
+                using (var sw = new StreamWriter(fs))
+                { 
+                    if(strings.Count > 0)
+                    {
+                        foreach (string stringPrint in strings)
+                        {
+                            sw.WriteLine(stringPrint);
+                        }
+                    }
+                    else
+                    {
+                        sw.WriteLine("null");
+                    }
+                }
+            }
+        }
     }
 }

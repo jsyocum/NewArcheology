@@ -17,6 +17,7 @@ using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
 using System.Windows.Input;
+using System.IO;
 
 namespace ArchHelper2
 {
@@ -210,7 +211,7 @@ namespace ArchHelper2
                     {
                         material.ItemAmount = ++material.ItemAmount;
                     }
-                    else if (material.ItemAmount > 0)
+                    else if (material.ItemAmount > 1)
                     {
                         material.ItemAmount = --material.ItemAmount;
                     }
@@ -232,7 +233,7 @@ namespace ArchHelper2
                     {
                         changedArte.amountNeeded = ++changedArte.amountNeeded;
                     }
-                    else if (changedArte.amountNeeded > 0)
+                    else if (changedArte.amountNeeded > 1)
                     {
                         changedArte.amountNeeded = --changedArte.amountNeeded;
                     }
@@ -376,6 +377,20 @@ namespace ArchHelper2
             foreach (T item in listBoxItems)
             {
                 listBox.Items.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Adds a list of items to a ListBox's selected items
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="listBox"></param>
+        /// <param name="listBoxItems"></param>
+        public static void AddSelectedItemsToListBox<T>(ListBox listBox, List<T> listBoxItems)
+        {
+            foreach (T item in listBoxItems)
+            {
+                listBox.SelectedItems.Add(item);
             }
         }
 
@@ -610,6 +625,221 @@ namespace ArchHelper2
             if(result == CommonFileDialogResult.Ok)
             {
                 path = dialog.FileName;
+            }
+        }
+
+        /// <summary>
+        /// Saves the artefact and material ListBox's current states to four files.
+        /// </summary>
+        /// <param name="savePath"></param>
+        /// <param name="artefactListBox"></param>
+        /// <param name="materialListBox"></param>
+        /// <returns></returns>
+        public static void Save(string savePath, ListBox artefactListBox, ListBox materialListBox)
+        {
+            System.IO.Directory.CreateDirectory(savePath);
+
+            SaveSettings(savePath);
+
+            SaveArtefacts(savePath, artefactListBox);
+            SaveMaterials(savePath, materialListBox);
+        }
+
+        /// <summary>
+        /// Saves various settings to a text file
+        /// </summary>
+        /// <param name="saveFolderPath"></param>
+        public static void SaveSettings(string saveFolderPath)
+        {
+            List<string> settings = new List<string> 
+            { 
+                new string("MainWindowHeight=" + GrabOpenWindow<MainWindow>().ActualHeight),
+                new string("MainWindowWidth=" + GrabOpenWindow<MainWindow>().ActualWidth),
+                new string("DebugConsoleHeight=" + GrabOpenWindow<DebugConsole>().ActualHeight),
+                new string("DebugConsoleWidth=" + GrabOpenWindow<DebugConsole>().ActualWidth),
+            };
+
+            string settingsSavePath = System.IO.Path.Combine(saveFolderPath, "settings.txt");
+            PrintStringsToFile(settingsSavePath, settings);
+        }
+
+        /// <summary>
+        /// Prints the artefacts, selected artefacts, and their amounts from a ListBox
+        /// </summary>
+        /// <param name="saveFolderPath"></param>
+        /// <param name="listBox"></param>
+        public static void SaveArtefacts(string saveFolderPath, ListBox listBox)
+        {
+            List<artefact> artefacts = new List<artefact>(GetItemsFromListBox<artefact>(listBox, 1));
+            List<string> artefactsStrings = new List<string>();
+            foreach (artefact arte in artefacts)
+            {
+                artefactsStrings.Add(arte.arteName);
+                artefactsStrings.Add(arte.amountNeeded.ToString());
+            }
+
+            List<artefact> selectedArtefacts = new List<artefact>(GetItemsFromListBox<artefact>(listBox, 2));
+            List<string> selectedArtefactsStrings = new List<string>();
+            foreach (artefact arte in selectedArtefacts)
+            {
+                selectedArtefactsStrings.Add(arte.arteName);
+            }
+
+            string artefactsSavePath = System.IO.Path.Combine(saveFolderPath, "artefactsAdded.txt");
+            PrintStringsToFile(artefactsSavePath, artefactsStrings);
+
+            string selectedArtefactsSavePath = System.IO.Path.Combine(saveFolderPath, "selectedArtefactsAdded.txt");
+            PrintStringsToFile(selectedArtefactsSavePath, selectedArtefactsStrings);
+        }
+
+        /// <summary>
+        /// Prints the materials, selected materials, and their amounts from a ListBox
+        /// </summary>
+        /// <param name="saveFolderPath"></param>
+        /// <param name="listBox"></param>
+        public static void SaveMaterials(string saveFolderPath, ListBox listBox)
+        {
+            List<listBoxItem> materials = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(listBox, 1));
+            List<string> materialsStrings = new List<string>();
+            foreach (listBoxItem mat in materials)
+            {
+                materialsStrings.Add(mat.ItemName);
+                materialsStrings.Add(mat.ItemAmount.ToString());
+            }
+
+            List<listBoxItem> selectedMaterials = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(listBox, 2));
+            List<string> selectedMaterialsStrings = new List<string>();
+            foreach (listBoxItem mat in selectedMaterials)
+            {
+                selectedMaterialsStrings.Add(mat.ItemName);
+            }
+
+            string materialsSavePath = System.IO.Path.Combine(saveFolderPath, "materialsAdded.txt");
+            PrintStringsToFile(materialsSavePath, materialsStrings);
+
+            string selectedMaterialsSavePath = System.IO.Path.Combine(saveFolderPath, "selectedMaterialsAdded.txt");
+            PrintStringsToFile(selectedMaterialsSavePath, selectedMaterialsStrings);
+        }
+
+        /// <summary>
+        /// Loads everything it can for the ListBoxes and settings
+        /// </summary>
+        /// <param name="loadPath"></param>
+        /// <param name="artefactListBox"></param>
+        /// <param name="materialListBox"></param>
+        /// <returns></returns>
+        public static bool Load(string loadPath, ListBox artefactListBox, ListBox artefactsAddedListBox, ListBox materialListBox, ListBox materialsAddedListBox, List<artefact> artefactsReference, List<listBoxItem> materialsReference)
+        {
+            if (!System.IO.Directory.Exists(loadPath))
+            {
+                string defaultLoadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\SaveState\\");
+                ConsoleWriteLine("Load path directory \"" + loadPath + "\" does not exist. Try the default: \"" + defaultLoadPath + "\"", debugLoad);
+                return false;
+            }
+
+
+
+            LoadSettings(loadPath);
+
+            LoadArtefacts(loadPath, artefactListBox, artefactsAddedListBox, artefactsReference);
+            LoadMaterials(loadPath, materialListBox, materialsReference);
+
+            return true;
+        }
+
+        public static void LoadSettings(string loadPath)
+        {
+
+        }
+
+        public static void LoadArtefacts(string loadPath, ListBox listBox, ListBox addedListBox, List<artefact> artefactsReference)
+        {
+            string artefactLoadPath = Path.Combine(loadPath, "artefactsAdded.txt");
+            List<string> artefactNamesLoaded = new List<string>();
+            List<int> artefactAmountsLoaded = new List<int>();
+            ParseAlternatingTextFile(artefactLoadPath, artefactNamesLoaded, artefactAmountsLoaded);
+
+            //Create and populate a list of all the actual artefacts based on their names
+            List<artefact> realLoadedArtefacts = new List<artefact>();
+            foreach (string fakeArte in artefactNamesLoaded)
+            {
+                foreach (artefact arte in artefactsReference)
+                {
+                    if (fakeArte == arte.arteName)
+                    {
+                        realLoadedArtefacts.Add(arte);
+                    }
+                }
+            }
+
+            //Create another list of all the actual artefacts plus their amount needed
+            int i = 0;
+            List<artefact> artefactsWithNeeded = new List<artefact>();
+            foreach (artefact arte in realLoadedArtefacts)
+            {
+                artefact arteWithNeeded = arte;
+                arteWithNeeded.amountNeeded = artefactAmountsLoaded[i];
+                artefactsWithNeeded.Add(arteWithNeeded);
+            }
+
+            //Create a list of all the selected artefacts in string form
+            string selectedArtefactsLoadPath = Path.Combine(loadPath, "selectedArtefactsAdded.txt");
+            List<string> fakeSelectedArtes = File.ReadAllLines(selectedArtefactsLoadPath).ToList();
+            List<artefact> realSelectedArtes = new List<artefact>();
+            foreach (string fakeArte in fakeSelectedArtes)
+            {
+                foreach (artefact arte in artefactsReference)
+                {
+                    if (fakeArte == arte.arteName)
+                    {
+                        realSelectedArtes.Add(arte);
+                    }
+                }
+            }
+
+            RemoveListBoxItemsFromListBox(listBox, artefactsWithNeeded);
+            AddItemsToListBox(addedListBox, artefactsWithNeeded);
+            AddSelectedItemsToListBox(addedListBox, realSelectedArtes);
+        }
+
+        public static void LoadMaterials(string loadPath, ListBox listBox, List<listBoxItem> materialsReference)
+        {
+
+        }
+
+        /// <summary>
+        /// Separates a text file containing strings and numbers into lists of strings and numbers.
+        /// </summary>
+        /// <param name="loadPath"></param>
+        /// <param name="strings"></param>
+        /// <param name="numbers"></param>
+        public static void ParseAlternatingTextFile(string loadPath, List<string> strings, List<int> numbers)
+        {
+            if (!File.Exists(loadPath))
+            {
+                ConsoleWriteLine("File \"" + loadPath + "\" does not exist.", debugLoad);
+                return;
+            }
+
+            List<string> fakeStrings = File.ReadAllLines(loadPath).ToList();
+
+            if(fakeStrings[0] == "null")
+            {
+                ConsoleWriteLine("File is null", debugLoad);
+                return;
+            }
+
+            foreach (string fakeString in fakeStrings)
+            {
+                int num;
+                if (int.TryParse(fakeString, out num))
+                {
+                    numbers.Add(num);
+                }
+                else
+                {
+                    strings.Add(fakeString);
+                }
             }
         }
     }

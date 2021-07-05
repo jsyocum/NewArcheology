@@ -1,3 +1,2 @@
-Add +/- buttons next to the "Change" buttons
 Add functionality to allow for continious use
 -When you close and open the program, it shouldn't look like anything's changed
