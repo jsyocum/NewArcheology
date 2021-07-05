@@ -21,10 +21,10 @@
             <RowDefinition Height="10" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="50*" MinHeight="60" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="50*" MinHeight="60" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
@@ -79,7 +79,7 @@
                     <ToolTip Content="Decide how many of each selected item you want restored" />
                 </TextBox.ToolTip>
             </TextBox>
-            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="ArtefactAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
             <Button Grid.Column="1" Margin="0,0,0,20" 
@@ -125,7 +125,7 @@
                     <ToolTip Content="Input how many of each material you already have" />
                 </TextBox.ToolTip>
             </TextBox>
-            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="MaterialAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
             <Button Grid.Column="1" Margin="0,0,0,20" 
@@ -159,7 +159,7 @@
                    x:Name="ArtefactRemoveSearchBlock" IsHitTestVisible="False"/>
         
         <ListBox Grid.Column="2" Grid.Row="3" Margin="0,0,20,10" FontSize="15"
-                 x:Name="ArtefactsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactsAddedListBox_PreviewMouseRightButtonUp" >
+                 x:Name="ArtefactsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactsAddedListBox_PreviewMouseRightButtonUp" PreviewMouseLeftButtonUp="ArtefactsAddedListBox_PreviewMouseLeftButtonUp" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -185,8 +185,10 @@
 
         <Grid Grid.Column="2" Grid.Row="4" Margin="0,0,20,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40*" />
-                <ColumnDefinition Width="60*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" 
@@ -195,12 +197,16 @@
                     <ToolTip Content="Change the amount of an artefact you want restored" />
                 </TextBox.ToolTip>
             </TextBox>
-            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="ArtefactAmountRemoveTextBlock" IsHitTestVisible="False" />
-            <Button Grid.Column="1" Margin="0,0,0,20" 
+            <Button Grid.Column="2" Margin="2.5,0,0,20"
+                    x:Name="ArtefactUpButton" Content="+" IsEnabled="False" Click="ArtefactUpButton_Click" />
+            <Button Grid.Column="1" Margin="0,0,2.5,20"
+                    x:Name="ArtefactDownButton" Content="-" IsEnabled="False" Click="ArtefactDownButton_Click" />
+            <Button Grid.Column="3" Margin="10,0,0,20" 
                     x:Name="ArtefactRemoveButton" Content="Remove" Click="ArtefactRemoveButton_Click" />
-            <Button Grid.Column="1" Margin="0,0,0,20"
+            <Button Grid.Column="3" Margin="10,0,0,20"
                     x:Name="ArtefactChangeButton" Content="Change" Visibility="Hidden" Click="ArtefactChangeButton_Click" />
         </Grid>
 
@@ -212,7 +218,7 @@
                    x:Name="MaterialRemoveSearchBlock" IsHitTestVisible="False"/>
 
         <ListBox Grid.Column="2" Grid.Row="6" Margin="0,0,20,10" FontSize="15"
-                 x:Name="MaterialsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialsAddedListBox_PreviewMouseRightButtonUp" >
+                 x:Name="MaterialsAddedListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialsAddedListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialsAddedListBox_PreviewMouseRightButtonUp" PreviewMouseLeftButtonUp="MaterialsAddedListBox_PreviewMouseLeftButtonUp" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -235,8 +241,10 @@
 
         <Grid Grid.Column="2" Grid.Row="7" Margin="0,0,20,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40*" />
-                <ColumnDefinition Width="60*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" 
@@ -245,12 +253,16 @@
                     <ToolTip Content="Change the amount of a material you have" />
                 </TextBox.ToolTip>
             </TextBox>
-            <TextBlock Grid.Column="0" Margin="0,0,10,20" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="MaterialAmountRemoveTextBlock" IsHitTestVisible="False" />
-            <Button Grid.Column="1" Margin="0,0,0,20" 
+            <Button Grid.Column="2" Margin="2.5,0,0,20"
+                    x:Name="MaterialUpButton" Content="+" IsEnabled="False" Click="MaterialUpButton_Click" />
+            <Button Grid.Column="1" Margin="0,0,2.5,20"
+                    x:Name="MaterialDownButton" Content="-" IsEnabled="False" Click="MaterialDownButton_Click" />
+            <Button Grid.Column="3" Margin="10,0,0,20" 
                     x:Name="MaterialRemoveButton" Content="Remove" Click="MaterialRemoveButton_Click" />
-            <Button Grid.Column="1" Margin="0,0,0,20"
+            <Button Grid.Column="3" Margin="10,0,0,20"
                     x:Name="MaterialChangeButton" Content="Change" Visibility="Hidden" Click="MaterialChangeButton_Click" />
         </Grid>
 

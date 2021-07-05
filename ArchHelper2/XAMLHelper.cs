@@ -197,6 +197,57 @@ namespace ArchHelper2
             }
         }
 
+        public static void ListBoxUpOrDownButton<T>(bool upButton, ListBox listBox)
+        {
+            if (typeof(T) == typeof(listBoxItem))
+            {
+                List<listBoxItem> changedListBoxItems = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(listBox, 2));
+                foreach (listBoxItem material in changedListBoxItems)
+                {
+                    listBox.Items.Remove(material);
+
+                    if (upButton)
+                    {
+                        material.ItemAmount = ++material.ItemAmount;
+                    }
+                    else if (material.ItemAmount > 0)
+                    {
+                        material.ItemAmount = --material.ItemAmount;
+                    }
+
+                    listBox.Items.Add(material);
+                    listBox.SelectedItems.Add(material);
+                }
+            }
+            else if (typeof(T) == typeof(artefact))
+            {
+                List<artefact> changedArtefacts = new List<artefact>(GetItemsFromListBox<artefact>(listBox, 2));
+                List<artefact> newChangedArtefacts = new List<artefact>();
+                foreach(artefact arte in changedArtefacts)
+                {
+                    listBox.Items.Remove(arte);
+                    artefact changedArte = arte;
+
+                    if (upButton)
+                    {
+                        changedArte.amountNeeded = ++changedArte.amountNeeded;
+                    }
+                    else if (changedArte.amountNeeded > 0)
+                    {
+                        changedArte.amountNeeded = --changedArte.amountNeeded;
+                    }
+
+                    listBox.Items.Add(changedArte);
+                    listBox.SelectedItems.Add(changedArte);
+                }
+            }
+            else
+            {
+                ConsoleWriteLine("The type " + typeof(T) + " is not compatible with the \"ListBoxUpOrDownButton\" function.", debugGeneral);
+                return;
+            }
+        }
+
         /// <summary>
         /// Decides which button should be showed based on whether or not there is text in a TextBox.
         /// </summary>
@@ -217,6 +268,26 @@ namespace ArchHelper2
             {
                 removeButton.Visibility = Visibility.Visible;
                 changeButton.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether or not the +/- buttons should be active based on whether or not there are any selected items in the listbox
+        /// </summary>
+        /// <param name="listBox"></param>
+        /// <param name="upButton"></param>
+        /// <param name="downButton"></param>
+        public static void ToggleUpDownButtons(ListBox listBox, Button upButton, Button downButton)
+        {
+            if (listBox.SelectedItems.Count > 0)
+            {
+                upButton.IsEnabled = true;
+                downButton.IsEnabled = true;
+            }
+            else
+            {
+                upButton.IsEnabled = false;
+                downButton.IsEnabled = false;
             }
         }
 

@@ -196,6 +196,11 @@ namespace ArchHelper2
         }
 
         //ArtefactListBox
+        private void ArtefactsAddedListBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
+        }
+
         private void ArtefactListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             artefactListBoxSelectedItemsTrackedBefore = GetItemsFromListBox<artefact>(ArtefactListBox, 2);
@@ -257,6 +262,8 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved, 
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            ArtefactAddBox.Text = "1";
         }
 
         //ArtefactRemoveSearchBox
@@ -267,6 +274,11 @@ namespace ArchHelper2
         }
 
         //ArtefactsAddedListBox
+        private void ArtefactsAddedListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
+        }
+
         private void ArtefactsAddedListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             artefactAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<artefact>(ArtefactsAddedListBox, 2);
@@ -281,11 +293,13 @@ namespace ArchHelper2
         private void ArtefactsAddedBoxSelectAll_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ArtefactsAddedListBox.SelectAll();
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
         }
 
         private void ArtefactsAddedBoxUnselectAll_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ArtefactsAddedListBox.UnselectAll();
+            ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
         }
 
         private void ArtefactsAddedBoxWiki_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -331,6 +345,20 @@ namespace ArchHelper2
             WhichButton(ArtefactRemoveBox, ArtefactRemoveButton, ArtefactChangeButton);
         }
 
+        //ArtefactUpButton
+        private void ArtefactUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxUpOrDownButton<artefact>(true, ArtefactsAddedListBox);
+            FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, null);
+        }
+
+        //ArtefactDownButton
+        private void ArtefactDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxUpOrDownButton<artefact>(false, ArtefactsAddedListBox);
+            FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, null);
+        }
+
         //ArtefactRemoveButton
         private void ArtefactRemoveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -351,6 +379,8 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved, 
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            ArtefactRemoveBox.Text = "";
         }
 
 
@@ -420,11 +450,13 @@ namespace ArchHelper2
         private void MaterialAddButton_Click(object sender, RoutedEventArgs e)
         {
             ListBoxAddItemsFunction<listBoxItem>(MaterialListBox, MaterialsAddedListBox, MaterialAddBox);
-            FilterListBoxItems(MaterialsAddedListBox, MaterialSearchBox.Text, materialAddBoxItemsRemoved, null);
+            FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, null);
 
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            MaterialAddBox.Text = "1";
         }
 
         //MaterialRemoveSearchBox
@@ -435,6 +467,11 @@ namespace ArchHelper2
         }
 
         //MaterialsAddedListBox
+        private void MaterialsAddedListBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ToggleUpDownButtons(MaterialsAddedListBox, MaterialUpButton, MaterialDownButton);
+        }
+
         private void MaterialsAddedListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             materialAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<listBoxItem>(MaterialsAddedListBox, 2);
@@ -449,11 +486,13 @@ namespace ArchHelper2
         private void MaterialsAddedListBoxSelectAll_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MaterialsAddedListBox.SelectAll();
+            ToggleUpDownButtons(MaterialsAddedListBox, MaterialUpButton, MaterialDownButton);
         }
 
         private void MaterialsAddedListBoxUnselectAll_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MaterialsAddedListBox.UnselectAll();
+            ToggleUpDownButtons(MaterialsAddedListBox, MaterialUpButton, MaterialDownButton);
         }
 
         private void MaterialsAddedBoxWiki_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -499,6 +538,20 @@ namespace ArchHelper2
             WhichButton(MaterialRemoveBox, MaterialRemoveButton, MaterialChangeButton);
         }
 
+        //MaterialUpButton
+        private void MaterialUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxUpOrDownButton<listBoxItem>(true, MaterialsAddedListBox);
+            FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, null);
+        }
+
+        //MaterialDownButton
+        private void MaterialDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxUpOrDownButton<listBoxItem>(false, MaterialsAddedListBox);
+            FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, null);
+        }
+
         //MaterialRemoveButton
         private void MaterialRemoveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -518,6 +571,8 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved, 
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            MaterialRemoveBox.Text = "";
         }
 
         //MaterialsRequiredSearchBox
