@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArchHelper2"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="ArchHelper -- BETA 1.1.4" Height="800" Width="1200">
+        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200">
 
     <Grid>
         <Grid.ColumnDefinitions>
