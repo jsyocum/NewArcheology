@@ -63,7 +63,13 @@ Death rune
 Tetracompass piece (left)
 Tetracompass piece (right)
 Tetracompass piece (dial)
-Tetracompass piece (needle)";
+Tetracompass piece (needle)
+Felt
+Compass rose
+Dragon metal
+Orgone
+Carbon black
+";
 
         public static string[] materialsHardCoded = materialsHardCodedSingle.Split("\r\n");
     }

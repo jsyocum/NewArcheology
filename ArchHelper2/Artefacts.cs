@@ -466,7 +466,74 @@ Horogothgar cooking pot
 45000
 'Da Boss Man' sculpture
 34 50 29 44 37 44
-45000";
+45000
+Pasaha
+57 40 8 38
+10888.9
+Ritual bell
+8 40 58 38
+10888.9
+Vazara
+59 30 58 28 8 28
+15000
+Kilaya
+59 46 58 40
+15000
+Death mask
+60 56 37 34
+17500
+Dragonkin calendar
+60 34 61 28 58 28
+17500
+Dragonkin staff
+60 56 58 34
+17500
+Dragon scalpel
+59 52 57 42
+19833.3
+Protective goggles
+57 42 9 52
+19833.3
+Dragon burner
+59 52 60 42
+21000
+Orthenglass flask
+59 34 9 60
+21000
+Meditation pipe
+60 60 59 40
+25666.7
+Singing bowl
+60 60 59 40
+25666.7
+Personal totem
+60 48 61 26 58 26
+25666.7
+Lingam stone
+60 44 61 30 58 32
+28333.3
+Master control
+60 30 61 32 58 44
+28333.3
+Xolo hard hat
+8 54 59 66
+35000
+Xolo pickaxe
+8 36 59 50 60 34
+35000
+Xolo spear
+59 74 60 64
+45000
+Xolo shield
+8 52 60 44 57 42
+45000
+Gold dish
+8 86 59 54
+46666.7
+'Raksha' idol
+60 56 59 44 8 40
+46666.7
+";
 
         public static string[] artefactsHardCoded = artefactsHardCodedSingle.Split("\r\n");
     }
