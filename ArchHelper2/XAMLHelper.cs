@@ -239,17 +239,19 @@ namespace ArchHelper2
                 List<artefact> newChangedArtefacts = new List<artefact>();
                 foreach(artefact arte in changedArtefacts)
                 {
-                    listBox.Items.Remove(arte);
-                    artefact changedArte = arte;
+                    int newAmount = arte.amountNeeded;
 
                     if (upButton)
                     {
-                        changedArte.amountNeeded = ++changedArte.amountNeeded;
+                        newAmount = arte.amountNeeded + 1;
                     }
-                    else if (changedArte.amountNeeded > 1)
+                    else if (arte.amountNeeded > 1)
                     {
-                        changedArte.amountNeeded = --changedArte.amountNeeded;
+                        newAmount = arte.amountNeeded - 1;
                     }
+
+                    listBox.Items.Remove(arte);
+                    artefact changedArte = new artefact(arte.arteName, arte.experience, arte.matAmountsNeeded, arte.matsNeeded, newAmount, arte.URL);
 
                     listBox.Items.Add(changedArte);
                     listBox.SelectedItems.Add(changedArte);
@@ -797,6 +799,7 @@ namespace ArchHelper2
             ToggleUpDownButtons(materialsAddedListBox, materialUpButton, materialDownButton);
 
             GetRequiredMaterialsMain();
+            UpdateTotalExperienceGainedMain();
             artefactAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<artefact>(artefactsAddedListBox, 2);
             materialAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<listBoxItem>(materialsAddedListBox, 2);
 
@@ -971,6 +974,29 @@ namespace ArchHelper2
                 {
                     strings.Add(fakeString);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the TotalExperienceGained textblock based on the artefacts added.
+        /// </summary>
+        /// <param name="artefactsAddedListBox"></param>
+        /// <param name="totalExperienceGained"></param>
+        public static void UpdateTotalExperienceGained(ListBox artefactsAddedListBox, TextBlock totalExperienceGained)
+        {
+            if(artefactsAddedListBox.Items.Count < 1)
+            {
+                totalExperienceGained.Text = "Total exp. gained: 0";
+            }
+            else
+            {
+                double expGained = 0;
+                foreach (artefact arte in artefactsAddedListBox.Items)
+                {
+                    expGained += arte.totalExperience;
+                }
+
+                totalExperienceGained.Text = "Total exp. gained: " + expGained.ToString();
             }
         }
     }

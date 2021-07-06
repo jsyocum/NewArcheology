@@ -146,6 +146,9 @@ namespace ArchHelper2
         List<listBoxItem> materialsRequiredListBoxSelectedItemsTrackedBefore = new List<listBoxItem>();
         listBoxItem materialsRequiredListBoxRightClicked = new listBoxItem();
 
+        //Declaring total experience gained stuff
+        public static TextBlock totalExpGained = new TextBlock();
+
         //Declaring search boxes
         public static TextBox artefactTextBox = new TextBox();
         public static TextBox artefactRemoveSearchBox = new TextBox();
@@ -163,6 +166,8 @@ namespace ArchHelper2
             materialListBox = MaterialListBox;
             materialsAddedListBox = MaterialsAddedListBox;
             materialsRequiredListBox = MaterialsRequiredListBox;
+
+            totalExpGained = totalExperienceGained;
 
             artefactTextBox = ArtefactTextBox;
             artefactRemoveSearchBox = ArtefactRemoveSearchBox;
@@ -185,15 +190,22 @@ namespace ArchHelper2
             allMaterials = allMaterialsHardCoded;
             BuildListBoxes(allMaterials);
 
+            UpdateTotalExperienceGainedMain();
+
             Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactUpButton, artefactDownButton,
                 materialUpButton, materialDownButton, allArtefacts, allMaterials);
-        }
 
+        }
 
         public static void GetRequiredMaterialsMain()
         {
             GetRequiredMaterials(artefactsAddedListBox, materialsAddedListBox, materialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
+        }
+
+        public static void UpdateTotalExperienceGainedMain()
+        {
+            UpdateTotalExperienceGained(artefactsAddedListBox, totalExpGained);
         }
 
         ///////////////////Importing artefacts and materials stuff///////////////////
@@ -315,6 +327,8 @@ namespace ArchHelper2
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
 
+            UpdateTotalExperienceGainedMain();
+
             ArtefactAddBox.Text = "1";
         }
 
@@ -406,6 +420,8 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            UpdateTotalExperienceGainedMain();
         }
 
         //ArtefactDownButton
@@ -417,6 +433,8 @@ namespace ArchHelper2
             GetRequiredMaterials(ArtefactsAddedListBox, MaterialsAddedListBox, MaterialsRequiredListBox, allMaterials, artefactAddBoxItemsRemoved,
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+
+            UpdateTotalExperienceGainedMain();
         }
 
         //ArtefactRemoveButton
@@ -429,6 +447,7 @@ namespace ArchHelper2
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
 
+            UpdateTotalExperienceGainedMain();
             ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
             ArtefactRemoveBox.Text = "";
         }
@@ -443,6 +462,7 @@ namespace ArchHelper2
                                  materialListBoxItemsRemoved, materialsRequiredListBoxItemsRemoved, materialsRequiredListBoxItemsEnough);
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
 
+            UpdateTotalExperienceGainedMain();
             ToggleUpDownButtons(ArtefactsAddedListBox, ArtefactUpButton, ArtefactDownButton);
             ArtefactRemoveBox.Text = "";
         }
