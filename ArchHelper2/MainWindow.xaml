@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArchHelper2"
+        Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200">
+        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" Closed="Window_Closed">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -43,7 +44,7 @@
                    Text="Search artefacts to add" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="ArtefactTextBlock" IsHitTestVisible="False"/>
         <ListBox Grid.Column="1" Grid.Row="3" Margin="0,0,20,10" FontSize="15"
-                 x:Name="ArtefactListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactListBox_PreviewMouseRightButtonUp" >
+                 x:Name="ArtefactListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="ArtefactListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="ArtefactListBox_PreviewMouseRightButtonUp" PreviewMouseLeftButtonUp="ArtefactListBox_PreviewMouseLeftButtonUp" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -72,7 +73,7 @@
                 <ColumnDefinition Width="60*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Margin="0,0,10,20" 
+            <TextBox Grid.Column="0" Margin="0,0,10,20" Text="1"
                      x:Name="ArtefactAddBox" PreviewKeyDown="ArtefactAddBox_PreviewKeyDown" TextChanged="ArtefactAddBox_TextChanged" PreviewMouseRightButtonUp="ArtefactAddBox_PreviewMouseRightButtonUp" >
                 <TextBox.ToolTip>
                     <ToolTip Content="Decide how many of each selected item you want restored" />
@@ -81,7 +82,7 @@
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="ArtefactAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
-            <Button Grid.Column="1" Margin="0,0,0,20" 
+            <Button Grid.Column="1" Margin="0,0,0,20" IsEnabled="False"
                     x:Name="ArtefactAddButton" Content="Add" Click="ArtefactAddButton_Click" />
         </Grid>
         
@@ -92,7 +93,7 @@
                    Text="Search materials to add" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="MaterialSearchBlock" IsHitTestVisible="False"/>
         <ListBox Grid.Column="1" Grid.Row="6" Margin="0,0,20,10" FontSize="15"
-                 x:Name="MaterialListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialListBox_PreviewMouseRightButtonUp" >
+                 x:Name="MaterialListBox" SelectionMode="Multiple" PreviewMouseRightButtonDown="MaterialListBox_PreviewMouseRightButtonDown" PreviewMouseRightButtonUp="MaterialListBox_PreviewMouseRightButtonUp" PreviewMouseLeftButtonUp="MaterialListBox_PreviewMouseLeftButtonUp" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -118,7 +119,7 @@
                 <ColumnDefinition Width="60*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Margin="0,0,10,20"
+            <TextBox Grid.Column="0" Margin="0,0,10,20" Text="1"
                      x:Name="MaterialAddBox" PreviewKeyDown="MaterialAddBox_PreviewKeyDown" TextChanged="MaterialAddBox_TextChanged" PreviewMouseRightButtonUp="MaterialAddBox_PreviewMouseRightButtonUp" >
                 <TextBox.ToolTip>
                     <ToolTip Content="Input how many of each material you already have" />
@@ -127,7 +128,7 @@
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
                    x:Name="MaterialAmountTextBlock" IsHitTestVisible="False" Visibility="Hidden" />
-            <Button Grid.Column="1" Margin="0,0,0,20" 
+            <Button Grid.Column="1" Margin="0,0,0,20" IsEnabled="False"
                     x:Name="MaterialAddButton" Content="Add" Click="MaterialAddButton_Click" />
         </Grid>
         
@@ -209,7 +210,7 @@
                     x:Name="ArtefactUpButton" Content="+" IsEnabled="False" Click="ArtefactUpButton_Click" />
             <Button Grid.Column="1" Margin="0,0,2.5,20"
                     x:Name="ArtefactDownButton" Content="-" IsEnabled="False" Click="ArtefactDownButton_Click" />
-            <Button Grid.Column="3" Margin="10,0,0,20" 
+            <Button Grid.Column="3" Margin="10,0,0,20" IsEnabled="False"
                     x:Name="ArtefactRemoveButton" Content="Remove" Click="ArtefactRemoveButton_Click" />
             <Button Grid.Column="3" Margin="10,0,0,20"
                     x:Name="ArtefactChangeButton" Content="Change" Visibility="Hidden" Click="ArtefactChangeButton_Click" />
@@ -265,7 +266,7 @@
                     x:Name="MaterialUpButton" Content="+" IsEnabled="False" Click="MaterialUpButton_Click" />
             <Button Grid.Column="1" Margin="0,0,2.5,20"
                     x:Name="MaterialDownButton" Content="-" IsEnabled="False" Click="MaterialDownButton_Click" />
-            <Button Grid.Column="3" Margin="10,0,0,20" 
+            <Button Grid.Column="3" Margin="10,0,0,20" IsEnabled="False"
                     x:Name="MaterialRemoveButton" Content="Remove" Click="MaterialRemoveButton_Click" />
             <Button Grid.Column="3" Margin="10,0,0,20"
                     x:Name="MaterialChangeButton" Content="Change" Visibility="Hidden" Click="MaterialChangeButton_Click" />

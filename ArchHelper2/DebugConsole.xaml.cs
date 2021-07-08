@@ -270,8 +270,8 @@ namespace ArchHelper2
 
                     case "load":
                         string loadPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
-                        Load(loadPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactUpButton, artefactDownButton,
-                                materialUpButton, materialDownButton, allArtefacts, allMaterials);
+                        Load(loadPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
+                                materialsAddedButtons, allArtefacts, allMaterials);
 
                         PopulateDebugConsole("Attempted to load from: " + loadPath);
 

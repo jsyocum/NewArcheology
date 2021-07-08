@@ -30,12 +30,15 @@ namespace ArchHelper2
         /// <param name="textBlockName">The TextBlock wanting to be hidden.</param>
         public static void HideSearchText(TextBox textBoxName, TextBlock textBlockName)
         {
-            textBlockName.Visibility = Visibility.Hidden;
-            switch (textBoxName.Text.Length)
+            if (textBlockName != null)
             {
-                case 0:
-                    textBlockName.Visibility = Visibility.Visible;
-                    break;
+                textBlockName.Visibility = Visibility.Hidden;
+                switch (textBoxName.Text.Length)
+                {
+                    case 0:
+                        textBlockName.Visibility = Visibility.Visible;
+                        break;
+                }
             }
         }
 
@@ -288,23 +291,35 @@ namespace ArchHelper2
         }
 
         /// <summary>
-        /// Determines whether or not the +/- buttons should be active based on whether or not there are any selected items in the listbox
+        /// Determines whether or not a list of buttons should be active based on whether or not there are any selected items in a listbox
         /// </summary>
         /// <param name="listBox"></param>
         /// <param name="upButton"></param>
         /// <param name="downButton"></param>
-        public static void ToggleUpDownButtons(ListBox listBox, Button upButton, Button downButton)
+        public static void ToggleButtonsBasedOnListBox(ListBox listBox, List<Button> buttons)
         {
             if (listBox.SelectedItems.Count > 0)
             {
-                upButton.IsEnabled = true;
-                downButton.IsEnabled = true;
+                foreach (Button button in buttons)
+                {
+                    button.IsEnabled = true;
+                }
             }
             else
             {
-                upButton.IsEnabled = false;
-                downButton.IsEnabled = false;
+                foreach (Button button in buttons)
+                {
+                    button.IsEnabled = false;
+                }
             }
+        }
+
+        public static void ToggleButtonsBasedOnListBox(ListBox listBox, Button button)
+        {
+            List<Button> buttons = new();
+            buttons.Add(button);
+
+            ToggleButtonsBasedOnListBox(listBox, buttons);
         }
 
         /// <summary>
@@ -764,7 +779,7 @@ namespace ArchHelper2
         /// <param name="materialListBox"></param>
         /// <returns></returns>
         public static bool Load(string appDirectoryPath, ListBox artefactListBox, ListBox artefactsAddedListBox, ListBox materialListBox, 
-            ListBox materialsAddedListBox, Button artefactUpButton, Button artefactDownButton, Button materialUpButton, Button materialDownButton, 
+            ListBox materialsAddedListBox, Button artefactAddButtonLoad, Button materialAddButtonLoad, List<Button> artefactsAddedButtonsLoad, List<Button> materialsAddedButtonsLoad, 
             List<artefact> artefactsReference, List<listBoxItem> materialsReference)
         {
             string loadPath = System.IO.Path.Combine(appDirectoryPath, "SaveState\\");
@@ -795,8 +810,10 @@ namespace ArchHelper2
             SortListBoxItems<artefact>(artefactsAddedListBox);
             SortListBoxItems<listBoxItem>(materialsAddedListBox);
 
-            ToggleUpDownButtons(artefactsAddedListBox, artefactUpButton, artefactDownButton);
-            ToggleUpDownButtons(materialsAddedListBox, materialUpButton, materialDownButton);
+            ToggleButtonsBasedOnListBox(artefactListBox, artefactAddButtonLoad);
+            ToggleButtonsBasedOnListBox(artefactsAddedListBox, artefactsAddedButtonsLoad);
+            ToggleButtonsBasedOnListBox(materialListBox, materialAddButtonLoad);
+            ToggleButtonsBasedOnListBox(materialsAddedListBox, materialsAddedButtonsLoad);
 
             GetRequiredMaterialsMain();
             UpdateTotalExperienceGainedMain();
@@ -996,6 +1013,7 @@ namespace ArchHelper2
                     expGained += arte.totalExperience;
                 }
 
+                expGained = Math.Round(expGained, 1);
                 totalExperienceGained.Text = "Total exp. gained: " + expGained.ToString();
             }
         }
