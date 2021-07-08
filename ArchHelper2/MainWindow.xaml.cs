@@ -260,11 +260,11 @@ namespace ArchHelper2
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            if(saveOnClose != -1)
-            {
-                Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
-                        materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
-            }
+            //if(saveOnClose != -1)
+            //{
+            //    Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+            //            materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+            //}
         }
 
         ///////////////////Importing artefacts and materials stuff///////////////////
