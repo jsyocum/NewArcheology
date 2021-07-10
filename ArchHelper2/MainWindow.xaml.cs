@@ -21,6 +21,7 @@ using static ArchHelper2.DeprecatedHelpers;
 using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
+using static ArchHelper2.ArchSetting;
 using static ArchHelper2.Artefacts;
 using static ArchHelper2.Materials;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -96,8 +97,17 @@ namespace ArchHelper2
 
 
         //Declaring application folder stuff
+        public static TextBox importArtefactsTextBox = new TextBox();
         public static string appFolderPath = "";
-        int saveOnClose = 0;
+        
+        public static string defaultAppPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+        public static string saveStateSpecificFilePath = "SaveState\\";
+        public static string autoSaveStateSpecificFilePath = "AutoSaveState\\";
+
+        public static ArchSetting appPath = new ArchSetting("AppPath", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\"));
+        public static ArchSetting saveOnExit = new ArchSetting("SaveOnExit", "Ask");
+
+        public static List<ArchSetting> settings = new List<ArchSetting> { appPath, saveOnExit };
 
         //Declaring allArtefact stuff
         public static List<artefact> allArtefacts = new List<artefact>();
@@ -186,8 +196,9 @@ namespace ArchHelper2
             materialSearchBox = MaterialSearchBox;
             materialRemoveSearchBox = MaterialRemoveSearchBox;
             materialsRequiredSearchBox = MaterialsRequiredSearchBox;
+            importArtefactsTextBox = ImportArtefactsTextBox;
 
-            ImportArtefactsTextBox.Text = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+            ImportArtefactsTextBox.Text = defaultAppPath;
 
             //Buttons
             artefactAddButton = ArtefactAddButton;
@@ -223,7 +234,6 @@ namespace ArchHelper2
 
             Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
                 materialsAddedButtons, allArtefacts, allMaterials);
-
         }
 
         public static void GetRequiredMaterialsMain()
@@ -237,17 +247,25 @@ namespace ArchHelper2
             UpdateTotalExperienceGained(artefactsAddedListBox, totalExpGained);
         }
 
+        public static void AutoSave()
+        {
+            Save(importArtefactsTextBox.Text, autoSaveStateSpecificFilePath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+                        materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+        }
+
         ///////////////////MainWindow stuff///////////////////
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+            AutoSave();
+
             MessageBoxResult saveBeforeClose = new MessageBoxResult();
 
-            if (saveOnClose == 0)
+            if (QuerySetting("Save on exit").Value == "Ask" || QuerySetting("Save on exit").Value == "null")
             {
                 saveBeforeClose = MessageBox.Show("Save before exiting?", "Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             }
 
-            if (saveBeforeClose == MessageBoxResult.Yes || saveOnClose == 1)
+            if (saveBeforeClose == MessageBoxResult.Yes || QuerySetting("Save on exit").Value == "Yes")
             {
                 Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                         materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
@@ -256,15 +274,17 @@ namespace ArchHelper2
             {
                 e.Cancel = true;
             }
+
+            if (IsWindowOpen<DebugConsole>() && saveBeforeClose != MessageBoxResult.Cancel)
+            {
+                GrabOpenWindow<DebugConsole>().Close();
+            }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if(saveOnClose != -1)
-            //{
-            //    Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
-            //            materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
-            //}
+            AddSetting<double>("MainWindowHeight", GrabOpenWindow<MainWindow>().ActualHeight);
+            AddSetting<double>("MainWindowWidth", GrabOpenWindow<MainWindow>().ActualWidth);
         }
 
         ///////////////////Importing artefacts and materials stuff///////////////////
@@ -792,6 +812,16 @@ namespace ArchHelper2
         private void MaterialsRequiredBoxWiki_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd", $"/c start {materialsRequiredListBoxRightClicked.URL}") { CreateNoWindow = true });
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
 
         

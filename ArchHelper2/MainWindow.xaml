@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:ArchHelper2"
         Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" Closed="Window_Closed">
+        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" KeyUp="Window_KeyUp" SizeChanged="Window_SizeChanged" >
 
-    <Grid>
+    <Grid SizeChanged="Grid_SizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="35*" />

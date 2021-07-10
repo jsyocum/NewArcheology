@@ -16,6 +16,7 @@ using static ArchHelper2.DeprecatedHelpers;
 using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
+using static ArchHelper2.ArchSetting;
 using System.Windows.Input;
 using System.IO;
 
@@ -666,9 +667,9 @@ namespace ArchHelper2
         /// <param name="artefactListBox"></param>
         /// <param name="materialListBox"></param>
         /// <returns></returns>
-        public static void Save(string appDirectoryPath, ListBox artefactListBox, ListBox materialListBox, List<artefact> artefactsRemoved, List<artefact> selectedArtefactsRemoved, List<listBoxItem> materialsRemoved, List<listBoxItem> selectedMaterialsRemoved)
+        public static void Save(string appDirectoryPath, string savePathSpecific, ListBox artefactListBox, ListBox materialListBox, List<artefact> artefactsRemoved, List<artefact> selectedArtefactsRemoved, List<listBoxItem> materialsRemoved, List<listBoxItem> selectedMaterialsRemoved)
         {
-            string savePath = System.IO.Path.Combine(appDirectoryPath, "SaveState\\");
+            string savePath = System.IO.Path.Combine(appDirectoryPath, savePathSpecific);
 
             System.IO.Directory.CreateDirectory(savePath);
 
@@ -693,24 +694,31 @@ namespace ArchHelper2
             RemoveListBoxItemsFromListBox<listBoxItem>(materialListBox, materialsRemoved);
         }
 
+        public static void Save(string appDirectoryPath, ListBox artefactListBox, ListBox materialListBox, List<artefact> artefactsRemoved, List<artefact> selectedArtefactsRemoved, List<listBoxItem> materialsRemoved, List<listBoxItem> selectedMaterialsRemoved)
+        {
+            string savePathSpecific = "SaveState\\";
+            Save(appDirectoryPath, savePathSpecific, artefactListBox, materialListBox, artefactsRemoved, selectedArtefactsRemoved, materialsRemoved, selectedMaterialsRemoved);
+        }
+
+
         /// <summary>
         /// Saves various settings to a text file
         /// </summary>
         /// <param name="saveFolderPath"></param>
-        public static void SaveSettings(string saveFolderPath)
+        public static void SaveSettings(string savePathSpecific, List<ArchSetting> settingsList)
         {
-            List<string> settings = new List<string>();
+            string settingsSavePath = System.IO.Path.Combine(savePathSpecific, "settings.txt");
+            PrintSettingsToFile(settingsSavePath, settingsList);
+        }
 
-            settings.Add("MainWindowHeight=" + GrabOpenWindow<MainWindow>().ActualHeight);
-            settings.Add("MainWindowWidth=" + GrabOpenWindow<MainWindow>().ActualWidth);
-            if (IsWindowOpen<DebugConsole>())
-            {
-                settings.Add("DebugConsoleHeight=" + GrabOpenWindow<DebugConsole>().ActualHeight);
-                settings.Add("DebugConsoleWidth=" + GrabOpenWindow<DebugConsole>().ActualWidth);
-            }
+        public static void SaveSettings(string savePathSpecific)
+        {
+            SaveSettings(savePathSpecific, settings);
+        }
 
-            string settingsSavePath = System.IO.Path.Combine(saveFolderPath, "settings.txt");
-            PrintStringsToFile(settingsSavePath, settings);
+        public static void SaveSettings()
+        {
+            SaveSettings(saveStateSpecificFilePath, settings);
         }
 
         /// <summary>
@@ -769,6 +777,72 @@ namespace ArchHelper2
 
             string selectedMaterialsSavePath = System.IO.Path.Combine(saveFolderPath, "selectedMaterialsAdded.txt");
             PrintStringsToFile(selectedMaterialsSavePath, selectedMaterialsStrings);
+        }
+
+
+        /// <summary>
+        /// Returns the correct ArchSetting from a list of ArchSettings based on name. Returns an ArchSetting with null values if it didn't find the setting.
+        /// </summary>
+        /// <param name="archSettings"></param>
+        /// <param name="settingName"></param>
+        /// <returns></returns>
+        public static ArchSetting QuerySetting(List<ArchSetting> archSettings, string settingName)
+        {
+            ArchSetting archSettingFind = new ArchSetting();
+            foreach (ArchSetting archSetting in archSettings)
+            {
+                if (settingName == archSetting.Name)
+                {
+                    archSettingFind = archSetting;
+                }
+            }
+
+            return archSettingFind;
+        }
+
+        /// <summary>
+        /// Returns the correct ArchSetting from the "settings" list of ArchSettings
+        /// </summary>
+        /// <param name="settingName"></param>
+        /// <returns></returns>
+        public static ArchSetting QuerySetting(string settingName)
+        {
+            return QuerySetting(settings, settingName);
+        }
+
+        public static ArchSetting QuerySetting(List<ArchSetting> archSettings, ArchSetting archSetting)
+        {
+            return QuerySetting(archSettings, archSetting.Name);
+        }
+
+        public static ArchSetting QuerySetting(ArchSetting archSetting)
+        {
+            return QuerySetting(settings, archSetting.Name);
+        }
+
+        /// <summary>
+        /// Creates an ArchSetting from the provided string and int/string, then updates the provided list of ArchSettings with it.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="archSettings"></param>
+        /// <param name="name"></param>
+        /// <param name="value">The value for the setting. Must be a string or int.</param>
+        public static void AddSetting<T>(List<ArchSetting> archSettings, string name, T value)
+        {
+            ArchSetting archSetting = new ArchSetting(name, value.ToString());
+
+            archSetting.Update(archSettings);
+        }
+
+        /// <summary>
+        /// Creates an ArchSetting from the provided string and int/string, then updates the list "settings" with it.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="value">The value for the setting. Must be a string or int.</param>
+        public static void AddSetting<T>(string name, T value)
+        {
+            AddSetting(settings, name, value.ToString());
         }
 
         /// <summary>
@@ -955,42 +1029,6 @@ namespace ArchHelper2
             if (File.Exists(selectedMaterialsLoadPath))
             {
                 AddSelectedItemsToListBox(addedListBox, realSelectedMats);
-            }
-        }
-
-        /// <summary>
-        /// Separates a text file containing strings and numbers into lists of strings and numbers.
-        /// </summary>
-        /// <param name="loadPath"></param>
-        /// <param name="strings"></param>
-        /// <param name="numbers"></param>
-        public static void ParseAlternatingTextFile(string loadPath, List<string> strings, List<int> numbers)
-        {
-            if (!File.Exists(loadPath))
-            {
-                ConsoleWriteLine("File \"" + loadPath + "\" does not exist.", debugLoad);
-                return;
-            }
-
-            List<string> fakeStrings = File.ReadAllLines(loadPath).ToList();
-
-            if(fakeStrings[0] == "null")
-            {
-                ConsoleWriteLine("File is null", debugLoad);
-                return;
-            }
-
-            foreach (string fakeString in fakeStrings)
-            {
-                int num;
-                if (int.TryParse(fakeString, out num))
-                {
-                    numbers.Add(num);
-                }
-                else
-                {
-                    strings.Add(fakeString);
-                }
             }
         }
 

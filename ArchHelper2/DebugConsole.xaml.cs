@@ -18,6 +18,7 @@ using static ArchHelper2.XAMLHelper;
 using static ArchHelper2.DeprecatedHelpers;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
+using static ArchHelper2.ArchSetting;
 
 namespace ArchHelper2
 {
