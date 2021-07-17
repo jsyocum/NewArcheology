@@ -180,6 +180,9 @@ namespace ArchHelper2
         {
             InitializeComponent();
             ConsoleWriteLine("(" + DateTime.Now.ToString() + ") MainWindow opened", debugGeneral);
+            
+            //Downloading resources
+            Download("", QuerySetting("appPath").Value)
 
             //ListBox "bindings"
             artefactListBox = ArtefactListBox;

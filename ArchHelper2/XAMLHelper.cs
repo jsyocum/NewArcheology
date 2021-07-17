@@ -929,8 +929,7 @@ namespace ArchHelper2
                 int i = 0;
                 foreach (artefact arte in realLoadedArtefacts)
                 {
-                    artefact arteWithNeeded = arte;
-                    arteWithNeeded.amountNeeded = artefactAmountsLoaded[i];
+                    artefact arteWithNeeded = new artefact(arte.arteName, arte.experience, arte.matAmountsNeeded, arte.matsNeeded, artefactAmountsLoaded[i], arte.URL);
                     artefactsWithNeeded.Add(arteWithNeeded);
 
                     ++i;

@@ -17,6 +17,7 @@ using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
 using static ArchHelper2.ArchSetting;
 using System.Windows.Input;
+using System.Net;
 
 namespace ArchHelper2
 {
@@ -386,6 +387,14 @@ namespace ArchHelper2
 
             string URL = itemNameConverted.ToString();
             return URL;
+        }
+
+        public static void Download(string URL, string savePath)
+        {
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFileAsync(new Uri(URL), savePath);
+            }
         }
 
         public static string FixFilePath(string filePath)

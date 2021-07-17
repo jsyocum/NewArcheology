@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="WindowsAPICodePack" Version="1.1.1" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
+    <PackageReference Include="XamlAnimatedGif" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

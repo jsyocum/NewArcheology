@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:local="clr-namespace:ArchHelper2"
         Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
@@ -141,6 +142,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,5,0" Height="28" VerticalAlignment="Center" 
@@ -153,7 +155,13 @@
             <Button Grid.Column="2" Margin="0,0,5,0" Height="28" VerticalAlignment="Center"
                     x:Name="SaveButton" Content=" Save " Click="SaveButton_Click" />
             <Button Grid.Column="3" Height="28" VerticalAlignment="Center"
-                    x:Name="LoadButton" Content=" Load " Click="LoadButton_Click" />
+                    x:Name="LoadButton" Margin="0,0,5,0" Content=" Load " Click="LoadButton_Click" />
+            <Button Grid.Column="4" Height="28" VerticalAlignment="Center"
+                    x:Name="SettingsButton">
+                <Button.Content>
+                    <Image gif:AnimationBehavior.SourceUri="https://img.icons8.com/material-outlined/24/000000/settings--v2.png" />
+                </Button.Content>
+            </Button>
 
         </Grid>
 
