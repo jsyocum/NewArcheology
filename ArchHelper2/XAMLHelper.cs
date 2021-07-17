@@ -793,7 +793,9 @@ namespace ArchHelper2
             {
                 if (settingName == archSetting.Name)
                 {
-                    archSettingFind = archSetting;
+                    //archSettingFind = archSetting;
+
+                    return archSetting;
                 }
             }
 

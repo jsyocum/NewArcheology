@@ -391,6 +391,8 @@ namespace ArchHelper2
 
         public static void Download(string URL, string savePath)
         {
+            System.IO.Directory.CreateDirectory(savePath);
+
             using (WebClient client = new WebClient())
             {
                 client.DownloadFileAsync(new Uri(URL), savePath);

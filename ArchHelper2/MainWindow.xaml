@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+        xmlns:properties="clr-namespace:ArchHelper2.Properties"
         xmlns:local="clr-namespace:ArchHelper2"
         Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
@@ -159,7 +160,12 @@
             <Button Grid.Column="4" Height="28" VerticalAlignment="Center"
                     x:Name="SettingsButton">
                 <Button.Content>
-                    <Image gif:AnimationBehavior.SourceUri="https://img.icons8.com/material-outlined/24/000000/settings--v2.png" />
+                    <!--
+                    <Image gif:AnimationBehavior.SourceUri="pack://application:ArchHelper2/Resources/icons8-settings.gif" />
+                    -->
+
+                    <Image gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-settings.gif" />
+
                 </Button.Content>
             </Button>
 

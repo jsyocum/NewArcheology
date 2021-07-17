@@ -180,9 +180,10 @@ namespace ArchHelper2
         {
             InitializeComponent();
             ConsoleWriteLine("(" + DateTime.Now.ToString() + ") MainWindow opened", debugGeneral);
-            
+
             //Downloading resources
-            Download("", QuerySetting("appPath").Value)
+            Download("https://raw.githubusercontent.com/jsyocum/NewArcheology/master/ArchHelper2/Resources/icons8-settings.gif", System.IO.Path.Combine(QuerySetting("AppPath").Value, "Resources\\"));
+            PopulateDebugConsole(System.IO.Path.Combine(QuerySetting("AppPath").Value, "Resources\\"));
 
             //ListBox "bindings"
             artefactListBox = ArtefactListBox;
