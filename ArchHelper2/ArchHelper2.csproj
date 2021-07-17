@@ -10,16 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\icons8-load.gif" />
+    <None Remove="Resources\icons8-save-ezgif.gif" />
     <None Remove="Resources\icons8-settings.gif" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="WindowsAPICodePack" Version="1.1.1" />
-    <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
     <PackageReference Include="XamlAnimatedGif" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\icons8-load.gif" />
+    <Resource Include="Resources\icons8-save-ezgif.gif" />
     <Resource Include="Resources\icons8-settings.gif" />
   </ItemGroup>
 

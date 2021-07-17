@@ -19,6 +19,7 @@ using static ArchHelper2.ArchDebugConsoleTools;
 using static ArchHelper2.ArchSetting;
 using System.Windows.Input;
 using System.IO;
+using XamlAnimatedGif;
 
 namespace ArchHelper2
 {
@@ -1054,6 +1055,21 @@ namespace ArchHelper2
 
                 expGained = Math.Round(expGained, 1);
                 totalExperienceGained.Text = "Total exp. gained: " + expGained.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Uses the XamlAnimatedGif library to play a gif.
+        /// </summary>
+        /// <param name="gif"></param>
+        public static void PlayGif(Image gif)
+        {
+            Animator aGif = AnimationBehavior.GetAnimator(gif);
+            if (aGif.CurrentFrameIndex == 0 || aGif.CurrentFrameIndex == aGif.FrameCount - 1)
+            {
+                aGif.Pause();
+                aGif.Rewind();
+                aGif.Play();
             }
         }
     }

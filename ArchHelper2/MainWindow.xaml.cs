@@ -27,6 +27,8 @@ using static ArchHelper2.Materials;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.ComponentModel;
+using XamlAnimatedGif;
+using System.Windows.Media.Animation;
 
 namespace ArchHelper2
 {
@@ -314,6 +316,8 @@ namespace ArchHelper2
         {
             Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                             materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+
+            PlayGif(SaveButtonImage);
         }
 
         //LoadButton
@@ -321,6 +325,19 @@ namespace ArchHelper2
         {
             Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
             materialsAddedButtons, allArtefacts, allMaterials);
+
+            PlayGif(LoadButtonImage);
+        }
+
+        //SettingsButton
+        private void SettingsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AnimationBehavior.GetAnimator(SettingsButtonImage).Play();
+        }
+
+        private void SettingsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AnimationBehavior.GetAnimator(SettingsButtonImage).Pause();
         }
 
         ///////////////////Artefact ListBox Stuff///////////////////

@@ -63,6 +63,26 @@ namespace ArchHelper2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] icons8_load {
+            get {
+                object obj = ResourceManager.GetObject("icons8_load", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] icons8_save_ezgif {
+            get {
+                object obj = ResourceManager.GetObject("icons8_save_ezgif", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] icons8_settings {
             get {
                 object obj = ResourceManager.GetObject("icons8_settings", resourceCulture);
