@@ -40,5 +40,13 @@ namespace ArchHelper2
                 settingsWindow.Show();
             }
         }
+
+        public static void CloseSettingsWindow()
+        {
+            if (IsWindowOpen<SettingsWindow>())
+            {
+                GrabOpenWindow<SettingsWindow>().Close();
+            }
+        }
     }
 }

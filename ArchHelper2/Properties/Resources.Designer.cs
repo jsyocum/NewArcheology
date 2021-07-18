@@ -73,6 +73,16 @@ namespace ArchHelper2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        public static byte[] icons8_delete {
+            get {
+                object obj = ResourceManager.GetObject("icons8_delete", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         public static byte[] icons8_dots_loading {
             get {
                 object obj = ResourceManager.GetObject("icons8_dots_loading", resourceCulture);
@@ -96,6 +106,26 @@ namespace ArchHelper2.Properties {
         public static byte[] icons8_load {
             get {
                 object obj = ResourceManager.GetObject("icons8_load", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icons8_refresh_all_defaults {
+            get {
+                object obj = ResourceManager.GetObject("icons8_refresh_all_defaults", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icons8_refresh_default {
+            get {
+                object obj = ResourceManager.GetObject("icons8_refresh_default", resourceCulture);
                 return ((byte[])(obj));
             }
         }

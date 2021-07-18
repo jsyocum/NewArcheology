@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:ArchHelper2"
         Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" KeyUp="Window_KeyUp" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" >
+        Title="ArchHelper -- BETA 2.0" Height="800" Width="1200" KeyUp="Window_KeyUp" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" >
 
     <Grid SizeChanged="Grid_SizeChanged">
         <Grid.ColumnDefinitions>
@@ -197,6 +197,10 @@
                               x:Name="ArtefactsAddedBoxUnselectAll" PreviewMouseLeftButtonDown="ArtefactsAddedBoxUnselectAll_PreviewMouseLeftButtonDown" />
                     <MenuItem Header="Go to wiki"
                               x:Name="ArtefactsAddedBoxWiki" PreviewMouseLeftButtonDown="ArtefactsAddedBoxWiki_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Add" IsEnabled="False" ToolTip="Add the amount entered to the artefact's count"
+                              x:Name="ArtefactsAddedBoxAdd" PreviewMouseLeftButtonDown="ArtefactsAddedBoxAdd_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Subtract" IsEnabled="False" ToolTip="Subtract the amount entered from the artefact's count"
+                              x:Name="ArtefactsAddedBoxSubtract" PreviewMouseLeftButtonDown="ArtefactsAddedBoxSubtract_PreviewMouseLeftButtonDown" />
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
@@ -250,6 +254,10 @@
                               x:Name="MaterialsAddedListBoxUnselectAll" PreviewMouseLeftButtonDown="MaterialsAddedListBoxUnselectAll_PreviewMouseLeftButtonDown" />
                     <MenuItem Header="Go to wiki"
                               x:Name="MaterialsAddedBoxWiki" PreviewMouseLeftButtonDown="MaterialsAddedBoxWiki_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Add" IsEnabled="False" ToolTip="Add the amount entered to the artefact's count"
+                              x:Name="MaterialsAddedBoxAdd" PreviewMouseLeftButtonDown="MaterialsAddedBoxAdd_PreviewMouseLeftButtonDown" />
+                    <MenuItem Header="Subtract" IsEnabled="False" ToolTip="Subtract the amount entered from the artefact's count"
+                              x:Name="MaterialsAddedBoxSubtract" PreviewMouseLeftButtonDown="MaterialsAddedBoxSubtract_PreviewMouseLeftButtonDown" />
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

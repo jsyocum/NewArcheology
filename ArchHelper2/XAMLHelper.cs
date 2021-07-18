@@ -292,6 +292,77 @@ namespace ArchHelper2
             }
         }
 
+        public static void EnableAddOrSubtract(MenuItem menuItemAdd, MenuItem menuItemSubtract, TextBox numberBox)
+        {
+            if (StringToInt(numberBox.Text) != 0)
+            {
+                if (menuItemAdd != null)
+                {
+                    menuItemAdd.IsEnabled = true;
+                }
+
+                if (menuItemSubtract != null)
+                {
+                    menuItemSubtract.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (menuItemAdd != null)
+                {
+                    menuItemAdd.IsEnabled = false;
+                }
+
+                if (menuItemSubtract != null)
+                {
+                    menuItemSubtract.IsEnabled = false;
+                }
+            }
+        }
+
+        public static void AddOrSubtract<T>(TextBox numberBox, T rightClickedItem, ListBox listBox, bool add)
+        {
+            int amountBeingAdded = StringToInt(numberBox.Text);
+            if (!add)
+            {
+                amountBeingAdded *= -1;
+            }
+
+
+            listBox.Items.Remove(rightClickedItem);
+
+            if (typeof(T) == typeof(artefact))
+            {
+                artefact rightClickedItemArtefact = (artefact)(object)rightClickedItem;
+
+                if (rightClickedItemArtefact.amountNeeded + amountBeingAdded > 0)
+                {
+                    artefact artefactAdded = new artefact(rightClickedItemArtefact.arteName, rightClickedItemArtefact.experience, rightClickedItemArtefact.matAmountsNeeded, rightClickedItemArtefact.matsNeeded, rightClickedItemArtefact.amountNeeded + amountBeingAdded, rightClickedItemArtefact.URL);
+                    listBox.Items.Add(artefactAdded);
+                }
+                else
+                {
+                    artefact artefactAdded = new artefact(rightClickedItemArtefact.arteName, rightClickedItemArtefact.experience, rightClickedItemArtefact.matAmountsNeeded, rightClickedItemArtefact.matsNeeded, 1, rightClickedItemArtefact.URL);
+                    listBox.Items.Add(artefactAdded);
+                }
+            }
+            else if (typeof(T) == typeof(listBoxItem))
+            {
+                listBoxItem rightClickedItemMaterial = (listBoxItem)(object)rightClickedItem;
+                
+                if (rightClickedItemMaterial.ItemAmount + amountBeingAdded > 0)
+                {
+                    rightClickedItemMaterial.ItemAmount += amountBeingAdded;
+                }
+                else
+                {
+                    rightClickedItemMaterial.ItemAmount = 1;
+                }
+
+                listBox.Items.Add(rightClickedItemMaterial);
+            }
+        }
+
         /// <summary>
         /// Determines whether or not a list of buttons should be active based on whether or not there are any selected items in a listbox
         /// </summary>
@@ -684,8 +755,6 @@ namespace ArchHelper2
             SortListBoxItems<listBoxItem>(materialListBox);
 
 
-            SaveSettings();
-
             SaveArtefacts(savePath, artefactListBox);
             SaveMaterials(savePath, materialListBox);
 
@@ -699,16 +768,6 @@ namespace ArchHelper2
         {
             string savePathSpecific = "SaveState\\";
             Save(appDirectoryPath, savePathSpecific, artefactListBox, materialListBox, artefactsRemoved, selectedArtefactsRemoved, materialsRemoved, selectedMaterialsRemoved);
-        }
-
-
-        /// <summary>
-        /// Saves various settings to a text file
-        /// </summary>
-        /// <param name="saveFolderPath"></param>
-        public static void SaveSettings()
-        {
-            ArchHelper2.Properties.Settings.Default.Save();
         }
 
         /// <summary>
@@ -1001,12 +1060,46 @@ namespace ArchHelper2
             AnimationBehavior.SetSourceUri(gif, uri);
         }
 
-        public static void SetWindowProperties(Window window, double windowHeight, double windowWidth, double windowLeft, double windowTop)
+        public static async void ReplaceButtonWithGif(Image gif, string source, Button textButton, Button gifButton, Window window)
         {
-            window.Height = windowHeight;
-            window.Width = windowWidth;
-            window.Left = windowLeft;
-            window.Top = windowTop;
+            textButton.Visibility = Visibility.Hidden;
+            gifButton.Visibility = Visibility.Visible;
+
+            PlayGif(gif, source, true);
+
+            Animator aGif = AnimationBehavior.GetAnimator(gif);
+            while (aGif.CurrentFrameIndex != aGif.FrameCount - 1)
+            {
+                await Task.Delay(1);
+            }
+
+            gifButton.Visibility = Visibility.Hidden;
+            textButton.Visibility = Visibility.Visible;
+
+            if (window != null)
+            {
+                window.Close();
+            }
+        }
+
+        public static async void ReplaceButtonWithGif(Image gif, string source, Button textButton, Button gifButton)
+        {
+            ReplaceButtonWithGif(gif, source, textButton, gifButton, null);
+        }
+
+        public static void SetWindowProperties(Window window, double windowHeight, double windowWidth, double windowLeft, double windowTop, bool setSize, bool setLocation)
+        {
+            if (setSize)
+            {
+                window.Height = windowHeight;
+                window.Width = windowWidth;
+            }
+
+            if (setLocation)
+            {
+                window.Left = windowLeft;
+                window.Top = windowTop;
+            }
         }
     }
 }

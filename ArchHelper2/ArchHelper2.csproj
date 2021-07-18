@@ -11,12 +11,20 @@
 
   <ItemGroup>
     <None Remove="Resources\icons8-copy.gif" />
+    <None Remove="Resources\icons8-delete.gif" />
     <None Remove="Resources\icons8-dots-loading.gif" />
     <None Remove="Resources\icons8-folderopen.gif" />
     <None Remove="Resources\icons8-load.gif" />
+    <None Remove="Resources\icons8-refresh-all-defaults.gif" />
+    <None Remove="Resources\icons8-refresh-default.gif" />
     <None Remove="Resources\icons8-save-ezgif.gif" />
     <None Remove="Resources\icons8-settings.gif" />
     <None Remove="To-do.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icons8-delete.gif" />
+    <Resource Include="Resources\icons8-refresh-all-defaults.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +37,7 @@
     <Resource Include="Resources\icons8-dots-loading.gif" />
     <Resource Include="Resources\icons8-folderopen.gif" />
     <Resource Include="Resources\icons8-load.gif" />
+    <Resource Include="Resources\icons8-refresh-default.gif" />
     <Resource Include="Resources\icons8-save-ezgif.gif" />
     <Resource Include="Resources\icons8-settings.gif" />
   </ItemGroup>

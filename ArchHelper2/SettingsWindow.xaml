@@ -6,7 +6,7 @@
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:local="clr-namespace:ArchHelper2"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="Settings" Height="600" Width="500">
+        Title="Settings" Height="600" Width="500" Closing="SettingsWindow_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
@@ -20,8 +20,31 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
             <StackPanel Orientation="Vertical">
+
+                <!-- Application folder settings (AppFolder) -->
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                        Text="Application folder" />
+
+                    <Button Grid.Column="2" Height="28" VerticalAlignment="Center" ToolTip="Reset default application folder (must press save to apply)"
+                            x:Name="AppFolderDefaultButton" Click="AppFolderDefaultButton_Click">
+                        <Button.Content>
+                            <Image x:Name="AppFolderDefaultButtonImage"
+                                gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-refresh-default.gif"
+                                gif:AnimationBehavior.AutoStart="False"
+                                gif:AnimationBehavior.RepeatBehavior="1x" />
+                        </Button.Content>
+                    </Button>
+
+                </Grid>
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -29,22 +52,16 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Margin="0,0,0,5"
-                        Text="Application folder" />
 
                     <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,5,0" Height="28" VerticalAlignment="Center" 
-                        x:Name="ImportArtefactsTextBox" IsReadOnly="True" TextChanged="ImportArtefactsTextBox_TextChanged" />
+                             x:Name="AppFolderTextBox" IsReadOnly="True" TextChanged="AppFolderTextBox_TextChanged"
+                             ToolTip="The folder where the application saves/loads artefact and material data"/>
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                        Text="Choose application folder" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
-                        x:Name="ImportArtefactsTextBlock" IsHitTestVisible="False"/>
+                               Text="Choose application folder" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
+                               x:Name="AppFolderTextBlock" IsHitTestVisible="False"/>
 
                     <Button Grid.Column="1" Grid.Row="1" Height="28" Margin="0,0,5,0" VerticalAlignment="Center"
-                        x:Name="AppFolderChooseButton" ToolTip="Choose application folder" Click="AppFolderChooseButton_Click" MouseEnter="AppFolderChooseButton_MouseEnter" MouseLeave="AppFolderChooseButton_MouseLeave">
+                            x:Name="AppFolderChooseButton" ToolTip="Choose application folder" Click="AppFolderChooseButton_Click" MouseEnter="AppFolderChooseButton_MouseEnter" MouseLeave="AppFolderChooseButton_MouseLeave">
                         <Button.Content>
                             <Image x:Name="AppFolderChooseButtonImage"
                                 gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-dots-loading.gif"
@@ -72,6 +89,79 @@
                     </Button>
                     
                 </Grid>
+                
+                
+                <!-- Save on exit-->
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="Save artefacts and materials on exit" />
+
+                    <Button Grid.Column="2" Height="28" VerticalAlignment="Center" ToolTip="Reset default save on exit setting (must press save to apply)"
+                            x:Name="SaveOnExitDefaultButton" Click="SaveOnExitDefaultButton_Click" >
+                        <Button.Content>
+                            <Image x:Name="SaveOnExitDefaultButtonImage"
+                                   gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-refresh-default.gif"
+                                   gif:AnimationBehavior.AutoStart="False"
+                                   gif:AnimationBehavior.RepeatBehavior="1x" />
+                        </Button.Content>
+                    </Button>
+
+                </Grid>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="0" Margin="0,0,5,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Save without asking"
+                                 Content="Always" x:Name="SaveOnExitAlways" Checked="SaveOnExitAlways_Checked" />
+                    <RadioButton Grid.Column="1" Margin="0,0,5,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Exit without saving or asking"
+                                 Content="Never" x:Name="SaveOnExitNever" Checked="SaveOnExitNever_Checked" />
+                    <RadioButton Grid.Column="2" Margin="0,0,5,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Always ask when exiting"
+                                 Content="Ask every time" x:Name="SaveOnExitAsk" Checked="SaveOnExitAsk_Checked" />
+                </Grid>
+                
+                
+                <!-- Save window properties on exit-->
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="Save window properties on exit" />
+
+                    <Button Grid.Column="2" Height="28" VerticalAlignment="Center" ToolTip="Reset default save window properties on exit setting (must press save to apply)"
+                            x:Name="SaveWindowPropertiesDefaultButton" Click="SaveWindowPropertiesDefaultButton_Click" >
+                        <Button.Content>
+                            <Image x:Name="SaveWindowPropertiesDefaultButtonImage"
+                                   gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-refresh-default.gif"
+                                   gif:AnimationBehavior.AutoStart="False"
+                                   gif:AnimationBehavior.RepeatBehavior="1x" />
+                        </Button.Content>
+                    </Button>
+
+                </Grid>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox Grid.Column="0" Margin="0,0,5,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Save the window's size on exit"
+                              Content="Size" x:Name="SaveWindowSizeCheckBox" Checked="SaveWindowSizeCheckBox_Checked" Unchecked="SaveWindowSizeCheckBox_Unchecked" />
+                    <CheckBox Grid.Column="1" Margin="0,0,5,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Save the window's location on exit"
+                              Content="Location" x:Name="SaveWindowLocationCheckBox" Checked="SaveWindowLocationCheckBox_Checked" Unchecked="SaveWindowLocationCheckBox_Unchecked" />
+                </Grid>
             </StackPanel>
         </ScrollViewer>
 
@@ -85,13 +175,40 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    x:Name="SettingsDefaultButton" Content="Default" ToolTip="Restore the default settings" />
+                    x:Name="SettingsDefaultButton" ToolTip="Restore the default settings" Click="SettingsDefaultButton_Click">
+                <Button.Content>
+                    <Image x:Name="SettingsDefaultButtonImage"
+                                gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-refresh-all-defaults.gif"
+                                gif:AnimationBehavior.AutoStart="False"
+                                gif:AnimationBehavior.RepeatBehavior="1x" />
+                </Button.Content>
+            </Button>
 
             <Button Grid.Column="2" Height="28" Margin="0,0,10,0" VerticalAlignment="Center"
-                    x:Name="SettingsSaveButton" Content="Save" ToolTip="Save the current settings" />
+                    x:Name="SettingsSaveButton" Content=" Save " ToolTip="Save the current settings" Click="SettingsSaveButton_Click" />
+            <Button Grid.Column="2" Height="28" Margin="0,0,10,0" VerticalAlignment="Center" Style="{DynamicResource ButtonWithoutHighlight}"
+                    x:Name="SettingsSaveButtonFake" Visibility="Hidden" Background="White">
+                <Button.Content>
+                    <Image Grid.Column="2" Height="28" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           x:Name="SettingsSaveButtonImage"
+                           gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-save-ezgif.gif"
+                           gif:AnimationBehavior.AutoStart="False"
+                           gif:AnimationBehavior.RepeatBehavior="1x" />
+                </Button.Content>
+            </Button>
 
             <Button Grid.Column="3" Height="28" VerticalAlignment="Center"
-                    x:Name="SettingsCancelButton" Content="Cancel" ToolTip="Cancel the current setting changes" />
+                    x:Name="SettingsCancelButton" Content="Close" ToolTip="Close the settings window (will cancel changes that weren't saved)" Click="SettingsCancelButton_Click" />
+            <Button Grid.Column="3" Height="28" VerticalAlignment="Center" Style="{DynamicResource ButtonWithoutHighlight}"
+                    x:Name="SettingsCancelButtonFake" Visibility="Hidden" Background="White">
+                <Button.Content>
+                    <Image Grid.Column="2" Height="28" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           x:Name="SettingsCancelButtonImage"
+                           gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-delete.gif"
+                           gif:AnimationBehavior.AutoStart="False"
+                           gif:AnimationBehavior.RepeatBehavior="1x" />
+                </Button.Content>
+            </Button>
         </Grid>
     </Grid>
 </Window>

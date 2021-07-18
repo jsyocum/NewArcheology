@@ -97,13 +97,25 @@ namespace ArchHelper2.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool SaveWindowLocation {
             get {
                 return ((bool)(this["SaveWindowLocation"]));
             }
             set {
                 this["SaveWindowLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SaveWindowSize {
+            get {
+                return ((bool)(this["SaveWindowSize"]));
+            }
+            set {
+                this["SaveWindowSize"] = value;
             }
         }
     }

@@ -163,9 +163,9 @@ namespace ArchHelper2
             ConsoleWriteLine("(" + DateTime.Now.ToString() + ") MainWindow opened", debugGeneral);
 
             //Setting default app path
-            if (ArchHelper2.Properties.Settings.Default.AppPath == "")
+            if (defSettings.AppPath == "")
             {
-                ArchHelper2.Properties.Settings.Default.AppPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+                defSettings.AppPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
             }
 
             //ListBox "bindings"
@@ -216,14 +216,10 @@ namespace ArchHelper2
 
             UpdateTotalExperienceGainedMain();
 
-            //Load(QuerySetting("AppPath").Value, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
-            //    materialsAddedButtons, allArtefacts, allMaterials);
-
             Load(defSettings.AppPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
                 materialsAddedButtons, allArtefacts, allMaterials);
 
-            //SetWindowProperties(GrabOpenWindow<MainWindow>(), QuerySetting("MainWindowHeight").ValueAsDouble, QuerySetting("MainWindowWidth").ValueAsDouble, QuerySetting("MainWindowLeft").ValueAsDouble, QuerySetting("MainWindowTop").ValueAsDouble);
-            SetWindowProperties(GrabOpenWindow<MainWindow>(), ArchHelper2.Properties.Settings.Default.MainWindowHeight, ArchHelper2.Properties.Settings.Default.MainWindowWidth, ArchHelper2.Properties.Settings.Default.MainWindowLeft, ArchHelper2.Properties.Settings.Default.MainWindowTop);
+            SetWindowProperties(GrabOpenWindow<MainWindow>(), defSettings.MainWindowHeight, defSettings.MainWindowWidth, defSettings.MainWindowLeft, defSettings.MainWindowTop, defSettings.SaveWindowSize, defSettings.SaveWindowLocation);
         }
 
         public static void GetRequiredMaterialsMain()
@@ -239,14 +235,34 @@ namespace ArchHelper2
 
         public static void AutoSave()
         {
-            Save(importArtefactsTextBox.Text, autoSaveStateSpecificFilePath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+            Save(defSettings.AppPath, autoSaveStateSpecificFilePath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                         materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+        }
+
+        public static void DeleteAutoSave()
+        {
+            string fullPath = System.IO.Path.Combine(defSettings.AppPath, autoSaveStateSpecificFilePath);
+            if (Directory.Exists(fullPath))
+            {
+                Directory.Delete(fullPath, true);
+            }
+        }
+
+        public static void SaveWindowProperties()
+        {
+            defSettings.MainWindowHeight = GrabOpenWindow<MainWindow>().ActualHeight;
+            defSettings.MainWindowWidth = GrabOpenWindow<MainWindow>().ActualWidth;
+            defSettings.MainWindowLeft = GrabOpenWindow<MainWindow>().Left;
+            defSettings.MainWindowTop = GrabOpenWindow<MainWindow>().Top;
+
+            defSettings.Save();
         }
 
         ///////////////////MainWindow stuff///////////////////
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             AutoSave();
+            SaveWindowProperties();
 
             MessageBoxResult saveBeforeClose = new MessageBoxResult();
 
@@ -255,7 +271,7 @@ namespace ArchHelper2
                 saveBeforeClose = MessageBox.Show("Save before exiting?", "Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             }
 
-            if (saveBeforeClose == MessageBoxResult.Yes || defSettings.SaveOnExit == "Yes")
+            if (saveBeforeClose == MessageBoxResult.Yes || defSettings.SaveOnExit == "Always")
             {
                 Save(defSettings.AppPath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                         materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
@@ -274,6 +290,8 @@ namespace ArchHelper2
             {
                 GrabOpenWindow<SettingsWindow>().Close();
             }
+
+            //DeleteAutoSave();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -301,8 +319,6 @@ namespace ArchHelper2
         {
             Save(defSettings.AppPath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                             materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
-
-            defSettings.Save();
 
             PlayGif(SaveButtonImage, "/ArchHelper2;component/Resources/icons8-save-ezgif.gif", true);
         }
@@ -476,6 +492,22 @@ namespace ArchHelper2
             Process.Start(new ProcessStartInfo("cmd", $"/c start {artefactAddBoxRightClicked.URL}") { CreateNoWindow = true });
         }
 
+        private void ArtefactsAddedBoxAdd_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, true);
+
+            GetRequiredMaterialsMain();
+            FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved);
+        }
+
+        private void ArtefactsAddedBoxSubtract_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, false);
+
+            GetRequiredMaterialsMain();
+            FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved);
+        }
+
         //ArtefactRemoveBox
         private void ArtefactRemoveBox_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -516,6 +548,7 @@ namespace ArchHelper2
         {
             HideSearchText(ArtefactRemoveBox, ArtefactAmountRemoveTextBlock);
             WhichButton(ArtefactRemoveBox, ArtefactRemoveButton, ArtefactChangeButton);
+            EnableAddOrSubtract(ArtefactsAddedBoxAdd, ArtefactsAddedBoxSubtract, ArtefactRemoveBox);
         }
 
         //ArtefactUpButton
@@ -704,6 +737,22 @@ namespace ArchHelper2
             Process.Start(new ProcessStartInfo("cmd", $"/c start {materialAddBoxRightClicked.URL}") { CreateNoWindow = true });
         }
 
+        private void MaterialsAddedBoxAdd_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, true);
+
+            GetRequiredMaterialsMain();
+            FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+        }
+
+        private void MaterialsAddedBoxSubtract_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, false);
+
+            GetRequiredMaterialsMain();
+            FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
+        }
+
         //MaterialRemoveBox
         private void MaterialRemoveBox_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -744,6 +793,7 @@ namespace ArchHelper2
         {
             HideSearchText(MaterialRemoveBox, MaterialAmountRemoveTextBlock);
             WhichButton(MaterialRemoveBox, MaterialRemoveButton, MaterialChangeButton);
+            EnableAddOrSubtract(MaterialsAddedBoxAdd, MaterialsAddedBoxSubtract, MaterialRemoveBox);
         }
 
         //MaterialUpButton

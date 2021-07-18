@@ -278,8 +278,11 @@ namespace ArchHelper2
 
             foreach (string line in stringList)
             {
-                listBoxItem newMaterial = new listBoxItem(line, 0, URLConverter(line));
-                materials.Add(newMaterial);
+                if (line != "")
+                {
+                    listBoxItem newMaterial = new listBoxItem(line, 0, URLConverter(line));
+                    materials.Add(newMaterial);
+                }
             }
 
             return materials;
