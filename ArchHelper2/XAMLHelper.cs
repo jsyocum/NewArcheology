@@ -16,10 +16,10 @@ using static ArchHelper2.DeprecatedHelpers;
 using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
-using static ArchHelper2.ArchSetting;
 using System.Windows.Input;
 using System.IO;
 using XamlAnimatedGif;
+using System.Runtime.InteropServices;
 
 namespace ArchHelper2
 {
@@ -684,7 +684,7 @@ namespace ArchHelper2
             SortListBoxItems<listBoxItem>(materialListBox);
 
 
-            SaveSettings(savePath);
+            SaveSettings();
 
             SaveArtefacts(savePath, artefactListBox);
             SaveMaterials(savePath, materialListBox);
@@ -706,20 +706,9 @@ namespace ArchHelper2
         /// Saves various settings to a text file
         /// </summary>
         /// <param name="saveFolderPath"></param>
-        public static void SaveSettings(string savePathSpecific, List<ArchSetting> settingsList)
-        {
-            string settingsSavePath = System.IO.Path.Combine(savePathSpecific, "settings.txt");
-            PrintSettingsToFile(settingsSavePath, settingsList);
-        }
-
-        public static void SaveSettings(string savePathSpecific)
-        {
-            SaveSettings(savePathSpecific, settings);
-        }
-
         public static void SaveSettings()
         {
-            SaveSettings(saveStateSpecificFilePath, settings);
+            ArchHelper2.Properties.Settings.Default.Save();
         }
 
         /// <summary>
@@ -781,72 +770,7 @@ namespace ArchHelper2
         }
 
 
-        /// <summary>
-        /// Returns the correct ArchSetting from a list of ArchSettings based on name. Returns an ArchSetting with null values if it didn't find the setting.
-        /// </summary>
-        /// <param name="archSettings"></param>
-        /// <param name="settingName"></param>
-        /// <returns></returns>
-        public static ArchSetting QuerySetting(List<ArchSetting> archSettings, string settingName)
-        {
-            ArchSetting archSettingFind = new ArchSetting();
-            foreach (ArchSetting archSetting in archSettings)
-            {
-                if (settingName == archSetting.Name)
-                {
-                    //archSettingFind = archSetting;
-
-                    return archSetting;
-                }
-            }
-
-            return archSettingFind;
-        }
-
-        /// <summary>
-        /// Returns the correct ArchSetting from the "settings" list of ArchSettings
-        /// </summary>
-        /// <param name="settingName"></param>
-        /// <returns></returns>
-        public static ArchSetting QuerySetting(string settingName)
-        {
-            return QuerySetting(settings, settingName);
-        }
-
-        public static ArchSetting QuerySetting(List<ArchSetting> archSettings, ArchSetting archSetting)
-        {
-            return QuerySetting(archSettings, archSetting.Name);
-        }
-
-        public static ArchSetting QuerySetting(ArchSetting archSetting)
-        {
-            return QuerySetting(settings, archSetting.Name);
-        }
-
-        /// <summary>
-        /// Creates an ArchSetting from the provided string and int/string, then updates the provided list of ArchSettings with it.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="archSettings"></param>
-        /// <param name="name"></param>
-        /// <param name="value">The value for the setting. Must be a string or int.</param>
-        public static void AddSetting<T>(List<ArchSetting> archSettings, string name, T value)
-        {
-            ArchSetting archSetting = new ArchSetting(name, value.ToString());
-
-            archSetting.Update(archSettings);
-        }
-
-        /// <summary>
-        /// Creates an ArchSetting from the provided string and int/string, then updates the list "settings" with it.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="value">The value for the setting. Must be a string or int.</param>
-        public static void AddSetting<T>(string name, T value)
-        {
-            AddSetting(settings, name, value.ToString());
-        }
+        
 
         /// <summary>
         /// Loads everything it can for the ListBoxes and settings
@@ -878,9 +802,6 @@ namespace ArchHelper2
             BuildListBoxes(artefactsReference);
             BuildListBoxes(materialsReference);
 
-
-            LoadSettings(loadPath);
-
             LoadArtefacts(loadPath, artefactListBox, artefactsAddedListBox, artefactsReference);
             LoadMaterials(loadPath, materialListBox, materialsAddedListBox, materialsReference);
 
@@ -898,11 +819,6 @@ namespace ArchHelper2
             materialAddBoxSelectedItemsTrackedBefore = GetItemsFromListBox<listBoxItem>(materialsAddedListBox, 2);
 
             return true;
-        }
-
-        public static void LoadSettings(string loadPath)
-        {
-
         }
 
         public static void LoadArtefacts(string loadPath, ListBox listBox, ListBox addedListBox, List<artefact> artefactsReference)
@@ -1062,15 +978,35 @@ namespace ArchHelper2
         /// Uses the XamlAnimatedGif library to play a gif.
         /// </summary>
         /// <param name="gif"></param>
-        public static void PlayGif(Image gif)
+        public static void PlayGif(Image gif, string source, bool allowInterrupt)
         {
             Animator aGif = AnimationBehavior.GetAnimator(gif);
-            if (aGif.CurrentFrameIndex == 0 || aGif.CurrentFrameIndex == aGif.FrameCount - 1)
+            if ((!allowInterrupt && (aGif.CurrentFrameIndex == 0 || aGif.CurrentFrameIndex == aGif.FrameCount - 1)) || allowInterrupt)
             {
-                aGif.Pause();
-                aGif.Rewind();
-                aGif.Play();
+                Uri uri = new Uri(source, UriKind.RelativeOrAbsolute);
+                AnimationBehavior.SetSourceUri(gif, uri);
+                AnimationBehavior.GetAnimator(gif).Play();
             }
+        }
+
+        public static async void StopGif(Image gif, string source)
+        {
+            Animator aGif = AnimationBehavior.GetAnimator(gif);
+            while (aGif.CurrentFrameIndex != 0 && aGif.CurrentFrameIndex != aGif.FrameCount - 1)
+            {
+                await Task.Delay(1);
+            }
+
+            Uri uri = new Uri(source, UriKind.RelativeOrAbsolute);
+            AnimationBehavior.SetSourceUri(gif, uri);
+        }
+
+        public static void SetWindowProperties(Window window, double windowHeight, double windowWidth, double windowLeft, double windowTop)
+        {
+            window.Height = windowHeight;
+            window.Width = windowWidth;
+            window.Left = windowLeft;
+            window.Top = windowTop;
         }
     }
 }

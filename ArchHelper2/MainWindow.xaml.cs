@@ -21,7 +21,8 @@ using static ArchHelper2.DeprecatedHelpers;
 using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
-using static ArchHelper2.ArchSetting;
+using static ArchHelper2.SettingsWindow;
+using static ArchHelper2.SettingsWindowTools;
 using static ArchHelper2.Artefacts;
 using static ArchHelper2.Materials;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -32,23 +33,6 @@ using System.Windows.Media.Animation;
 
 namespace ArchHelper2
 {
-    /*
-    Inputs:
-    All artefcat types and their material dependencies
-    All material types
-
-    User inputs:
-    Artefacts wanted to be restored
-    Materials already owned (optional)
-
-    Outputs:
-    Materials required to restore all artefacts (taking into account the artefacts already owned)
-    Which artefacts there are already enough materials to restore
-    How much experience will be gained per artifact, per group of similar artefacts, and
-    */
-
-
-
     public partial class MainWindow : Window
     {
 
@@ -101,15 +85,10 @@ namespace ArchHelper2
         //Declaring application folder stuff
         public static TextBox importArtefactsTextBox = new TextBox();
         public static string appFolderPath = "";
-        
-        public static string defaultAppPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+        public static Properties.Settings defSettings = ArchHelper2.Properties.Settings.Default;
+
         public static string saveStateSpecificFilePath = "SaveState\\";
         public static string autoSaveStateSpecificFilePath = "AutoSaveState\\";
-
-        public static ArchSetting appPath = new ArchSetting("AppPath", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\"));
-        public static ArchSetting saveOnExit = new ArchSetting("SaveOnExit", "Ask");
-
-        public static List<ArchSetting> settings = new List<ArchSetting> { appPath, saveOnExit };
 
         //Declaring allArtefact stuff
         public static List<artefact> allArtefacts = new List<artefact>();
@@ -183,9 +162,11 @@ namespace ArchHelper2
             InitializeComponent();
             ConsoleWriteLine("(" + DateTime.Now.ToString() + ") MainWindow opened", debugGeneral);
 
-            //Downloading resources
-            Download("https://raw.githubusercontent.com/jsyocum/NewArcheology/master/ArchHelper2/Resources/icons8-settings.gif", System.IO.Path.Combine(QuerySetting("AppPath").Value, "Resources\\"));
-            PopulateDebugConsole(System.IO.Path.Combine(QuerySetting("AppPath").Value, "Resources\\"));
+            //Setting default app path
+            if (ArchHelper2.Properties.Settings.Default.AppPath == "")
+            {
+                ArchHelper2.Properties.Settings.Default.AppPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArchHelper\\");
+            }
 
             //ListBox "bindings"
             artefactListBox = ArtefactListBox;
@@ -202,9 +183,6 @@ namespace ArchHelper2
             materialSearchBox = MaterialSearchBox;
             materialRemoveSearchBox = MaterialRemoveSearchBox;
             materialsRequiredSearchBox = MaterialsRequiredSearchBox;
-            importArtefactsTextBox = ImportArtefactsTextBox;
-
-            ImportArtefactsTextBox.Text = defaultAppPath;
 
             //Buttons
             artefactAddButton = ArtefactAddButton;
@@ -238,8 +216,14 @@ namespace ArchHelper2
 
             UpdateTotalExperienceGainedMain();
 
-            Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
+            //Load(QuerySetting("AppPath").Value, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
+            //    materialsAddedButtons, allArtefacts, allMaterials);
+
+            Load(defSettings.AppPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
                 materialsAddedButtons, allArtefacts, allMaterials);
+
+            //SetWindowProperties(GrabOpenWindow<MainWindow>(), QuerySetting("MainWindowHeight").ValueAsDouble, QuerySetting("MainWindowWidth").ValueAsDouble, QuerySetting("MainWindowLeft").ValueAsDouble, QuerySetting("MainWindowTop").ValueAsDouble);
+            SetWindowProperties(GrabOpenWindow<MainWindow>(), ArchHelper2.Properties.Settings.Default.MainWindowHeight, ArchHelper2.Properties.Settings.Default.MainWindowWidth, ArchHelper2.Properties.Settings.Default.MainWindowLeft, ArchHelper2.Properties.Settings.Default.MainWindowTop);
         }
 
         public static void GetRequiredMaterialsMain()
@@ -266,14 +250,14 @@ namespace ArchHelper2
 
             MessageBoxResult saveBeforeClose = new MessageBoxResult();
 
-            if (QuerySetting("Save on exit").Value == "Ask" || QuerySetting("Save on exit").Value == "null")
+            if (defSettings.SaveOnExit == "Ask")
             {
                 saveBeforeClose = MessageBox.Show("Save before exiting?", "Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             }
 
-            if (saveBeforeClose == MessageBoxResult.Yes || QuerySetting("Save on exit").Value == "Yes")
+            if (saveBeforeClose == MessageBoxResult.Yes || defSettings.SaveOnExit == "Yes")
             {
-                Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+                Save(defSettings.AppPath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                         materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
             }
             else if (saveBeforeClose == MessageBoxResult.Cancel)
@@ -285,51 +269,62 @@ namespace ArchHelper2
             {
                 GrabOpenWindow<DebugConsole>().Close();
             }
+
+            if (IsWindowOpen<SettingsWindow>() && saveBeforeClose != MessageBoxResult.Cancel)
+            {
+                GrabOpenWindow<SettingsWindow>().Close();
+            }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            AddSetting<double>("MainWindowHeight", GrabOpenWindow<MainWindow>().ActualHeight);
-            AddSetting<double>("MainWindowWidth", GrabOpenWindow<MainWindow>().ActualWidth);
-        }
-
-        ///////////////////Importing artefacts and materials stuff///////////////////
-
-        //ImportArtefactsTextBox
-        private void ImportArtefactsTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            HideSearchText(ImportArtefactsTextBox, ImportArtefactsTextBlock);
-        }
-
-        //ImportArtefacts button
-        private void ImportArtefacts_Click(object sender, RoutedEventArgs e)
-        {
-            SelectFolder(ref appFolderPath);
-            if(appFolderPath != "")
+            if (defSettings.SaveWindowLocation)
             {
-                ImportArtefactsTextBox.Text = appFolderPath;
+                defSettings.MainWindowHeight = GrabOpenWindow<MainWindow>().ActualHeight;
+                defSettings.MainWindowWidth = GrabOpenWindow<MainWindow>().ActualWidth;
             }
         }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (defSettings.SaveWindowLocation)
+            {
+                defSettings.MainWindowTop = GrabOpenWindow<MainWindow>().Top;
+                defSettings.MainWindowLeft = GrabOpenWindow<MainWindow>().Left;
+            }
+        }
+
+        ///////////////////Save, load, and settings buttons stuff///////////////////
 
         //SaveButton
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            Save(ImportArtefactsTextBox.Text, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
+            Save(defSettings.AppPath, artefactsAddedListBox, materialsAddedListBox, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved,
                             materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
 
-            PlayGif(SaveButtonImage);
+            defSettings.Save();
+
+            PlayGif(SaveButtonImage, "/ArchHelper2;component/Resources/icons8-save-ezgif.gif", true);
         }
 
         //LoadButton
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            Load(ImportArtefactsTextBox.Text, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
-            materialsAddedButtons, allArtefacts, allMaterials);
+            //Load(QuerySetting("AppPath").Value, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
+            //    materialsAddedButtons, allArtefacts, allMaterials);
 
-            PlayGif(LoadButtonImage);
+            Load(defSettings.AppPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
+                materialsAddedButtons, allArtefacts, allMaterials);
+
+            PlayGif(LoadButtonImage, "/ArchHelper2;component/Resources/icons8-load.gif", true);
         }
 
         //SettingsButton
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenSettingsWindow();
+        }
+
         private void SettingsButton_MouseEnter(object sender, MouseEventArgs e)
         {
             AnimationBehavior.GetAnimator(SettingsButtonImage).Play();
@@ -337,7 +332,7 @@ namespace ArchHelper2
 
         private void SettingsButton_MouseLeave(object sender, MouseEventArgs e)
         {
-            AnimationBehavior.GetAnimator(SettingsButtonImage).Pause();
+            StopGif(SettingsButtonImage, "/ArchHelper2;component/Resources/icons8-settings.gif");
         }
 
         ///////////////////Artefact ListBox Stuff///////////////////

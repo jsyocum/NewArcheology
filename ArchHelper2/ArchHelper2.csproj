@@ -10,9 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\icons8-copy.gif" />
+    <None Remove="Resources\icons8-dots-loading.gif" />
+    <None Remove="Resources\icons8-folderopen.gif" />
     <None Remove="Resources\icons8-load.gif" />
     <None Remove="Resources\icons8-save-ezgif.gif" />
     <None Remove="Resources\icons8-settings.gif" />
+    <None Remove="To-do.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\icons8-copy.gif" />
+    <Resource Include="Resources\icons8-dots-loading.gif" />
+    <Resource Include="Resources\icons8-folderopen.gif" />
     <Resource Include="Resources\icons8-load.gif" />
     <Resource Include="Resources\icons8-save-ezgif.gif" />
     <Resource Include="Resources\icons8-settings.gif" />
@@ -32,13 +39,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

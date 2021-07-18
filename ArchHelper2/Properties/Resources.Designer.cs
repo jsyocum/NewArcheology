@@ -22,7 +22,7 @@ namespace ArchHelper2.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace ArchHelper2.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ArchHelper2.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace ArchHelper2.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,37 @@ namespace ArchHelper2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] icons8_load {
+        public static byte[] icons8_copy {
+            get {
+                object obj = ResourceManager.GetObject("icons8_copy", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icons8_dots_loading {
+            get {
+                object obj = ResourceManager.GetObject("icons8_dots_loading", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icons8_folderopen {
+            get {
+                object obj = ResourceManager.GetObject("icons8_folderopen", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icons8_load {
             get {
                 object obj = ResourceManager.GetObject("icons8_load", resourceCulture);
                 return ((byte[])(obj));
@@ -73,7 +103,7 @@ namespace ArchHelper2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] icons8_save_ezgif {
+        public static byte[] icons8_save_ezgif {
             get {
                 object obj = ResourceManager.GetObject("icons8_save_ezgif", resourceCulture);
                 return ((byte[])(obj));
@@ -83,7 +113,7 @@ namespace ArchHelper2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] icons8_settings {
+        public static byte[] icons8_settings {
             get {
                 object obj = ResourceManager.GetObject("icons8_settings", resourceCulture);
                 return ((byte[])(obj));

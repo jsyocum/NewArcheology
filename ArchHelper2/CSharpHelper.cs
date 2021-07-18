@@ -15,7 +15,6 @@ using static ArchHelper2.XAMLHelper;
 using static ArchHelper2.DebugConsole;
 using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
-using static ArchHelper2.ArchSetting;
 using System.Windows.Input;
 using System.Net;
 
@@ -437,24 +436,9 @@ namespace ArchHelper2
             }
         }
 
-        /// <summary>
-        /// Prints the settings in a list of ArchSetting to a file in the syntax "<setting name>=<setting value>"
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="archSettings"></param>
-        public static void PrintSettingsToFile(string filePath, List<ArchSetting> archSettings)
-        {
-            List<string> settingsFileStrings = new List<string>();
+        
 
-            string archSettingString = "";
-            foreach (ArchSetting archSetting in archSettings)
-            {
-                archSettingString = archSetting.Name + "=" + archSetting.Value;
-                settingsFileStrings.Add(archSettingString);
-            }
-
-            PrintStringsToFile(filePath, settingsFileStrings);
-        }
+        
 
         /// <summary>
         /// Separates a text file containing strings and numbers into lists of strings and numbers.
@@ -474,7 +458,7 @@ namespace ArchHelper2
 
             if (fakeStrings[0] == "null")
             {
-                ConsoleWriteLine("File is null", debugLoad);
+                ConsoleWriteLine("File is null: " + loadPath, debugLoad);
                 return;
             }
 

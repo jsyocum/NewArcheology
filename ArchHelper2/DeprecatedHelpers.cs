@@ -20,6 +20,124 @@ namespace ArchHelper2
     class DeprecatedHelpers
     {
         /// <summary>
+        /// Prints the settings in a list of ArchSetting to a file in the syntax "<setting name>=<setting value>"
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="archSettings"></param>
+        //public static void PrintSettingsToFile(string filePath, List<ArchSetting> archSettings)
+        //{
+        //    List<string> settingsFileStrings = new List<string>();
+
+        //    string archSettingString = "";
+        //    foreach (ArchSetting archSetting in archSettings)
+        //    {
+        //        archSettingString = archSetting.Name + "=" + archSetting.Value;
+        //        settingsFileStrings.Add(archSettingString);
+        //    }
+
+        //    settingsFileStrings.Sort();
+
+        //    PrintStringsToFile(filePath, settingsFileStrings);
+        //}
+
+        /// <summary>
+        /// Takes in and loads all the settings from a file with this syntax for each line: "(setting name)=(setting value)"
+        /// </summary>
+        /// <param name="filePath">The exact path to the settings text file</param>
+        /// <param name="archSettings">The list of settings that you want updated</param>
+        //public static void ParseSettingsFile(string filePath, List<ArchSetting> archSettings)
+        //{
+        //    if (!File.Exists(filePath))
+        //    {
+        //        ConsoleWriteLine("File \"" + filePath + "\" does not exist.", debugLoad);
+        //        return;
+        //    }
+
+        //    List<string> fakeStrings = File.ReadAllLines(filePath).ToList();
+
+        //    if (fakeStrings[0] == "null")
+        //    {
+        //        ConsoleWriteLine("File is null: " + filePath, debugLoad);
+        //        return;
+        //    }
+
+        //    foreach (string line in fakeStrings)
+        //    {
+        //        string[] fakeSetting = line.Split('=');
+        //        ArchSetting archSetting = new ArchSetting(fakeSetting[0], fakeSetting[1]);
+
+        //        archSetting.Update(archSettings);
+        //    }
+        //}
+
+        /// <summary>
+        /// Returns the correct ArchSetting from a list of ArchSettings based on name. Returns an ArchSetting with null values if it didn't find the setting.
+        /// </summary>
+        /// <param name="archSettings"></param>
+        /// <param name="settingName"></param>
+        /// <returns></returns>
+        //public static ArchSetting QuerySetting(List<ArchSetting> archSettings, string settingName)
+        //{
+        //    ArchSetting archSettingFind = new ArchSetting();
+        //    foreach (ArchSetting archSetting in archSettings)
+        //    {
+        //        if (settingName == archSetting.Name)
+        //        {
+        //            //archSettingFind = archSetting;
+
+        //            return archSetting;
+        //        }
+        //    }
+
+        //    return archSettingFind;
+        //}
+
+        ///// <summary>
+        ///// Returns the correct ArchSetting from the "settings" list of ArchSettings
+        ///// </summary>
+        ///// <param name="settingName"></param>
+        ///// <returns></returns>
+        //public static ArchSetting QuerySetting(string settingName)
+        //{
+        //    return QuerySetting(settings, settingName);
+        //}
+
+        //public static ArchSetting QuerySetting(List<ArchSetting> archSettings, ArchSetting archSetting)
+        //{
+        //    return QuerySetting(archSettings, archSetting.Name);
+        //}
+
+        //public static ArchSetting QuerySetting(ArchSetting archSetting)
+        //{
+        //    return QuerySetting(settings, archSetting.Name);
+        //}
+
+        ///// <summary>
+        ///// Creates an ArchSetting from the provided string and int/string, then updates the provided list of ArchSettings with it.
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="archSettings"></param>
+        ///// <param name="name"></param>
+        ///// <param name="value">The value for the setting. Must be a string or int.</param>
+        //public static void AddSetting<T>(List<ArchSetting> archSettings, string name, T value)
+        //{
+        //    ArchSetting archSetting = new ArchSetting(name, value.ToString());
+
+        //    archSetting.Update(archSettings);
+        //}
+
+        ///// <summary>
+        ///// Creates an ArchSetting from the provided string and int/string, then updates the list "settings" with it.
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="name"></param>
+        ///// <param name="value">The value for the setting. Must be a string or int.</param>
+        //public static void AddSetting<T>(string name, T value)
+        //{
+        //    AddSetting(settings, name, value.ToString());
+        //}
+
+        /// <summary>
         /// Filters a ListBox of strings based on a TextBox's text. Adds filtered strings to a list.
         /// </summary>
         /// <param name="listBox">The listBox of strings you want filtered.</param>

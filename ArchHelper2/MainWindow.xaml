@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:ArchHelper2"
         Closing="MainWindow_Closing"
         mc:Ignorable="d" FontSize="20" FontFamily="Segoe UI Light"
-        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" KeyUp="Window_KeyUp" SizeChanged="Window_SizeChanged" >
+        Title="ArchHelper -- BETA 1.7" Height="800" Width="1200" KeyUp="Window_KeyUp" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" >
 
     <Grid SizeChanged="Grid_SizeChanged">
         <Grid.ColumnDefinitions>
@@ -76,10 +76,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" Text="1"
-                     x:Name="ArtefactAddBox" PreviewKeyDown="ArtefactAddBox_PreviewKeyDown" TextChanged="ArtefactAddBox_TextChanged" PreviewMouseRightButtonUp="ArtefactAddBox_PreviewMouseRightButtonUp" >
-                <TextBox.ToolTip>
-                    <ToolTip Content="Decide how many of each selected item you want restored" />
-                </TextBox.ToolTip>
+                     x:Name="ArtefactAddBox" ToolTip="Decide how many of each selected item you want restored" PreviewKeyDown="ArtefactAddBox_PreviewKeyDown" TextChanged="ArtefactAddBox_TextChanged" PreviewMouseRightButtonUp="ArtefactAddBox_PreviewMouseRightButtonUp" >
             </TextBox>
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
@@ -122,10 +119,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" Text="1"
-                     x:Name="MaterialAddBox" PreviewKeyDown="MaterialAddBox_PreviewKeyDown" TextChanged="MaterialAddBox_TextChanged" PreviewMouseRightButtonUp="MaterialAddBox_PreviewMouseRightButtonUp" >
-                <TextBox.ToolTip>
-                    <ToolTip Content="Input how many of each material you already have" />
-                </TextBox.ToolTip>
+                     x:Name="MaterialAddBox" ToolTip="Input how many of each material you already have" PreviewKeyDown="MaterialAddBox_PreviewKeyDown" TextChanged="MaterialAddBox_TextChanged" PreviewMouseRightButtonUp="MaterialAddBox_PreviewMouseRightButtonUp" >
             </TextBox>
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
@@ -137,7 +131,7 @@
         <!-- Column 2 -->
         
         <!-- Import artefacts -->
-        <Grid Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid Grid.Column="3" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
@@ -146,39 +140,26 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Margin="0,0,5,0" Height="28" VerticalAlignment="Center" 
-                     x:Name="ImportArtefactsTextBox" IsReadOnly="True" TextChanged="ImportArtefactsTextBox_TextChanged" />
-            <TextBlock Grid.Column="0" Margin="5,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Text="Select application folder" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
-                   x:Name="ImportArtefactsTextBlock" IsHitTestVisible="False"/>
-            <Button Grid.Column="1" Margin="0,0,20,0" Height="28" VerticalAlignment="Center"
-                    x:Name="ImportArtefacts" Content=" ... " Click="ImportArtefacts_Click" />
             <Button Grid.Column="2" Margin="0,0,5,0" Height="28" VerticalAlignment="Center"
-                    x:Name="SaveButton" Click="SaveButton_Click" >
+                    x:Name="SaveButton" ToolTip="Save state of artefacts and materials" Click="SaveButton_Click" >
                 <Button.Content>
                     <Image x:Name="SaveButtonImage"
                         gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-save-ezgif.gif"
                         gif:AnimationBehavior.AutoStart="False"
                         gif:AnimationBehavior.RepeatBehavior="1x" />
                 </Button.Content>
-                <Button.ToolTip>
-                    <TextBlock Text="Save state of artefacts and materials" />
-                </Button.ToolTip>
             </Button>
-            <Button Grid.Column="3" Height="28" VerticalAlignment="Center"
-                    x:Name="LoadButton" Margin="0,0,5,0" Click="LoadButton_Click">
+            <Button Grid.Column="3" Margin="0,0,5,0" Height="28" VerticalAlignment="Center" 
+                    x:Name="LoadButton" ToolTip="Load a saved state of artefacts and materials, if one exists" Click="LoadButton_Click">
                 <Button.Content>
                     <Image x:Name="LoadButtonImage"
                         gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-load.gif"
                         gif:AnimationBehavior.AutoStart="False"
                         gif:AnimationBehavior.RepeatBehavior="1x" />
                 </Button.Content>
-                <Button.ToolTip>
-                    <TextBlock Text="Load a saved state of artefacts and materials, if one exists" />
-                </Button.ToolTip>
             </Button>
             <Button Grid.Column="4" Height="28" VerticalAlignment="Center"
-                    x:Name="SettingsButton" MouseEnter="SettingsButton_MouseEnter" MouseLeave="SettingsButton_MouseLeave">
+                    x:Name="SettingsButton" ToolTip="Change application settings" MouseEnter="SettingsButton_MouseEnter" MouseLeave="SettingsButton_MouseLeave" Click="SettingsButton_Click">
                 <Button.Content>
                     <Image x:Name="SettingsButtonImage"
                         gif:AnimationBehavior.SourceUri="/ArchHelper2;component/Resources/icons8-settings.gif"
@@ -229,10 +210,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" 
-                     x:Name="ArtefactRemoveBox" PreviewKeyDown="ArtefactRemoveBox_PreviewKeyDown" TextChanged="ArtefactRemoveBox_TextChanged" PreviewMouseRightButtonUp="ArtefactRemoveBox_PreviewMouseRightButtonUp" >
-                <TextBox.ToolTip>
-                    <ToolTip Content="Change the amount of an artefact you want restored" />
-                </TextBox.ToolTip>
+                     x:Name="ArtefactRemoveBox" ToolTip="Change the amount of an artefact you want restored" PreviewKeyDown="ArtefactRemoveBox_PreviewKeyDown" TextChanged="ArtefactRemoveBox_TextChanged" PreviewMouseRightButtonUp="ArtefactRemoveBox_PreviewMouseRightButtonUp" >
             </TextBox>
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
@@ -285,10 +263,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Margin="0,0,10,20" 
-                     x:Name="MaterialRemoveBox" PreviewKeyDown="MaterialRemoveBox_PreviewKeyDown" TextChanged="MaterialRemoveBox_TextChanged" PreviewMouseRightButtonUp="MaterialRemoveBox_PreviewMouseRightButtonUp" >
-                <TextBox.ToolTip>
-                    <ToolTip Content="Change the amount of a material you have" />
-                </TextBox.ToolTip>
+                     x:Name="MaterialRemoveBox" ToolTip="Change the amount of a material you have" PreviewKeyDown="MaterialRemoveBox_PreviewKeyDown" TextChanged="MaterialRemoveBox_TextChanged" PreviewMouseRightButtonUp="MaterialRemoveBox_PreviewMouseRightButtonUp" >
             </TextBox>
             <TextBlock Grid.Column="0" Margin="5,0,10,20" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Text="Amount" FontSize="18" FontWeight="ExtraLight" Opacity="0.3"
