@@ -190,7 +190,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="ArtefactsAddedBoxContextMenu">
                     <MenuItem Header="Select all"
                               x:Name="ArtefactsAddedBoxSelectAll" PreviewMouseLeftButtonDown="ArtefactsAddedBoxSelectAll_PreviewMouseLeftButtonDown" />
                     <MenuItem Header="Unselect all" 
@@ -247,7 +247,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="MaterialsAddedListBoxContextMenu">
                     <MenuItem Header="Select all"
                               x:Name="MaterialsAddedListBoxSelectAll" PreviewMouseLeftButtonDown="MaterialsAddedListBoxSelectAll_PreviewMouseLeftButtonDown" />
                     <MenuItem Header="Unselect all" 

@@ -320,7 +320,7 @@ namespace ArchHelper2
             }
         }
 
-        public static void AddOrSubtract<T>(TextBox numberBox, T rightClickedItem, ListBox listBox, bool add)
+        public static void AddOrSubtract<T>(TextBox numberBox, T rightClickedItem, ListBox listBox, bool add, ContextMenu contextMenu)
         {
             int amountBeingAdded = StringToInt(numberBox.Text);
             if (!add)
@@ -328,7 +328,13 @@ namespace ArchHelper2
                 amountBeingAdded *= -1;
             }
 
+            bool wasSelected = false;
+            if (listBox.SelectedItems.Contains(rightClickedItem))
+            {
+                wasSelected = true;
+            }
 
+            numberBox.Text = "";
             listBox.Items.Remove(rightClickedItem);
 
             if (typeof(T) == typeof(artefact))
@@ -339,11 +345,21 @@ namespace ArchHelper2
                 {
                     artefact artefactAdded = new artefact(rightClickedItemArtefact.arteName, rightClickedItemArtefact.experience, rightClickedItemArtefact.matAmountsNeeded, rightClickedItemArtefact.matsNeeded, rightClickedItemArtefact.amountNeeded + amountBeingAdded, rightClickedItemArtefact.URL);
                     listBox.Items.Add(artefactAdded);
+
+                    if (wasSelected)
+                    {
+                        listBox.SelectedItems.Add(artefactAdded);
+                    }
                 }
                 else
                 {
                     artefact artefactAdded = new artefact(rightClickedItemArtefact.arteName, rightClickedItemArtefact.experience, rightClickedItemArtefact.matAmountsNeeded, rightClickedItemArtefact.matsNeeded, 1, rightClickedItemArtefact.URL);
                     listBox.Items.Add(artefactAdded);
+
+                    if (wasSelected)
+                    {
+                        listBox.SelectedItems.Add(artefactAdded);
+                    }
                 }
             }
             else if (typeof(T) == typeof(listBoxItem))
@@ -360,7 +376,22 @@ namespace ArchHelper2
                 }
 
                 listBox.Items.Add(rightClickedItemMaterial);
+
+                if (wasSelected)
+                {
+                    listBox.SelectedItems.Add(rightClickedItemMaterial);
+                }
             }
+
+            if (contextMenu != null)
+            {
+                contextMenu.IsOpen = false;
+            }
+        }
+
+        public static void AddOrSubtract<T>(TextBox numberBox, T rightClickedItem, ListBox listBox, bool add)
+        {
+            AddOrSubtract<T>(numberBox, rightClickedItem, listBox, add, null);
         }
 
         /// <summary>

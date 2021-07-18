@@ -494,7 +494,7 @@ namespace ArchHelper2
 
         private void ArtefactsAddedBoxAdd_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, true);
+            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, true, ArtefactsAddedBoxContextMenu);
 
             GetRequiredMaterialsMain();
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved);
@@ -502,7 +502,7 @@ namespace ArchHelper2
 
         private void ArtefactsAddedBoxSubtract_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, false);
+            AddOrSubtract<artefact>(ArtefactRemoveBox, artefactAddBoxRightClicked, ArtefactsAddedListBox, false, ArtefactsAddedBoxContextMenu);
 
             GetRequiredMaterialsMain();
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved);
@@ -739,7 +739,7 @@ namespace ArchHelper2
 
         private void MaterialsAddedBoxAdd_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, true);
+            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, true, MaterialsAddedListBoxContextMenu);
 
             GetRequiredMaterialsMain();
             FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
@@ -747,7 +747,7 @@ namespace ArchHelper2
 
         private void MaterialsAddedBoxSubtract_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, false);
+            AddOrSubtract<listBoxItem>(MaterialRemoveBox, materialAddBoxRightClicked, MaterialsAddedListBox, false, MaterialsAddedListBoxContextMenu);
 
             GetRequiredMaterialsMain();
             FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
