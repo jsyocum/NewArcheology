@@ -120,6 +120,61 @@ namespace ArchHelper2
         }
 
         /// <summary>
+        /// Figures out whether or not a ListBox contains an item (artefact or material) based on the provided item's name. Changes foundItem into the matched item.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="listBox">The ListBox being searched</param>
+        /// <param name="item">The item you're looking to match (must be the same type as the ListBox)</param>
+        /// <returns></returns>
+        public static bool ListBoxContains<T>(ListBox listBox, T item, ref T foundItem, ref bool selected)
+        {
+            bool contains = false;
+            
+            if (typeof(T) == typeof(artefact))
+            {
+                List<artefact> listBoxItems = new List<artefact>(GetItemsFromListBox<artefact>(listBox, 1));
+                List<artefact> listBoxItemsSelected = new List<artefact>(GetItemsFromListBox<artefact>(listBox, 2));
+                artefact itemArte = (artefact)(object)item;
+
+                foreach (artefact arte in listBoxItems)
+                {
+                    if (arte.arteName == itemArte.arteName)
+                    {
+                        foundItem = (T)(object)arte;
+                        contains = true;
+
+                        if (listBoxItemsSelected.Contains(arte))
+                        {
+                            selected = true;
+                        }
+                    }
+                }
+            }
+            else if (typeof(T) == typeof(listBoxItem))
+            {
+                List<listBoxItem> listBoxItems = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(listBox, 1));
+                List<listBoxItem> listBoxItemsSelected = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(listBox, 2));
+                listBoxItem itemMat = (listBoxItem)(object)item;
+
+                foreach (listBoxItem mat in listBoxItems)
+                {
+                    if (mat.ItemName == itemMat.ItemName)
+                    {
+                        foundItem = (T)(object)mat;
+                        contains = true;
+
+                        if (listBoxItemsSelected.Contains(mat))
+                        {
+                            selected = true;
+                        }
+                    }
+                }
+            }
+
+            return contains;
+        }
+
+        /// <summary>
         /// When an item in a ListBox is right clicked, this function figures out which one.
         /// </summary>
         /// <typeparam name="T">The type of items stored in the ListBox.</typeparam>
@@ -150,7 +205,6 @@ namespace ArchHelper2
             }
             else if (typeof(T) == typeof(listBoxItem))
             {
-                //listBoxItem listBoxItemRightClickedToListBoxItem = ChangeType<T, listBoxItem>(listBoxItemRightClicked);
                 listBoxItem listBoxItemRightClickedToListBoxItem = (listBoxItem)(object)listBoxItemRightClicked;
 
                 if (listBoxItemRightClicked != null)
@@ -229,7 +283,7 @@ namespace ArchHelper2
                     {
                         material.ItemAmount = ++material.ItemAmount;
                     }
-                    else if (material.ItemAmount > 1)
+                    else if (material.ItemAmount > 0)
                     {
                         material.ItemAmount = --material.ItemAmount;
                     }
@@ -250,7 +304,7 @@ namespace ArchHelper2
                     {
                         newAmount = arte.amountNeeded + 1;
                     }
-                    else if (arte.amountNeeded > 1)
+                    else if (arte.amountNeeded > 0)
                     {
                         newAmount = arte.amountNeeded - 1;
                     }
@@ -280,7 +334,7 @@ namespace ArchHelper2
             int amount = 0;
             int.TryParse(amountTextBox.Text, out amount);
 
-            if (amountTextBox.Text.Length > 0 && amount != 0)
+            if (amountTextBox.Text.Length > 0)
             {
                 removeButton.Visibility = Visibility.Hidden;
                 changeButton.Visibility = Visibility.Visible;
@@ -289,6 +343,70 @@ namespace ArchHelper2
             {
                 removeButton.Visibility = Visibility.Visible;
                 changeButton.Visibility = Visibility.Hidden;
+            }
+        }
+
+        public static void ListBoxWhichMenuItems<T>(MenuItem selectAll, MenuItem unselectAll, ListBox listBox, MenuItem goToWiki, MenuItem add, MenuItem subtract, MenuItem gotEnough, T listBoxRightClickedItem)
+        {
+            if (selectAll != null && unselectAll != null && listBox.Items.Count > 0)
+            {
+                selectAll.IsEnabled = true;
+                unselectAll.IsEnabled = true;
+            }
+            else if (selectAll != null && unselectAll != null)
+            {
+                selectAll.IsEnabled = false;
+                unselectAll.IsEnabled = false;
+            }
+
+            bool itemRightClicked = false;
+            if (listBoxRightClickedItem != null)
+            {
+                if (typeof(T) == typeof(artefact))
+                {
+                    artefact listBoxRightClickedItemArte = (artefact)(object)listBoxRightClickedItem;
+                    if (listBoxRightClickedItemArte.URL != null && listBoxRightClickedItemArte.URL.Length > 0)
+                    {
+                        itemRightClicked = true;
+                    }
+                }
+                else if (typeof(T) == typeof(listBoxItem))
+                {
+                    listBoxItem listBoxRightClickedItemMat = (listBoxItem)(object)listBoxRightClickedItem;
+                    if (listBoxRightClickedItemMat.URL != null && listBoxRightClickedItemMat.URL.Length > 0)
+                    {
+                        itemRightClicked = true;
+                    }
+                }
+            }
+
+            if (goToWiki != null && itemRightClicked)
+            {
+                goToWiki.IsEnabled = true;
+            }
+            else if (goToWiki != null)
+            {
+                goToWiki.IsEnabled = false;
+            }
+
+            if (add != null && subtract != null && itemRightClicked)
+            {
+                add.IsEnabled = true;
+                subtract.IsEnabled = true;
+            }
+            else if (add != null && subtract != null)
+            {
+                add.IsEnabled = false;
+                subtract.IsEnabled = false;
+            }
+
+            if (gotEnough != null && itemRightClicked)
+            {
+                gotEnough.IsEnabled = true;
+            }
+            else if (gotEnough != null)
+            {
+                gotEnough.IsEnabled = false;
             }
         }
 
@@ -434,10 +552,10 @@ namespace ArchHelper2
         /// <param name="amountTextBox">The amount each item should be assigned when moved to the new ListBox.</param>
         public static void ListBoxAddItemsFunction<T>(ListBox listBoxOG, ListBox listBoxTarget, TextBox amountTextBox)
         {
-            int amount = 0;
+            int amount = -1;
             int.TryParse(amountTextBox.Text, out amount);
 
-            if (amount != 0 && listBoxOG.SelectedItems.Count > 0)
+            if (amount != -1 && listBoxOG.SelectedItems.Count > 0)
             {
                 if(typeof(T) == typeof(listBoxItem))
                 {
@@ -470,8 +588,6 @@ namespace ArchHelper2
                         listBoxOG.Items.Remove(listBoxOG.SelectedItems[i]);
                     }
                 }
-
-                
             }
         }
 
@@ -651,17 +767,24 @@ namespace ArchHelper2
 
         public static void GetRequiredMaterials(ListBox artefactsAddedListBox, ListBox materialsAddedListBox, ListBox materialsRequiredListBox, 
                                                 List<listBoxItem> allMaterials, List<artefact> artefactsAddedListBoxItemsRemoved, 
-                                                List<listBoxItem> materialsAddedListBoxItemsRemoved, List<listBoxItem> materialsRequiredListBoxItemsRemoved,
+                                                List<listBoxItem> materialsAddedListBoxItemsRemoved, TextBox artefactsAddedSearchBox, TextBox materialsAddedSearchBox,
+                                                List<listBoxItem> materialsRequiredListBoxItemsRemoved,
                                                 List<listBoxItem> materialsRequiredListBoxItemsEnough)
         {
-            AddItemsToListBox(artefactsAddedListBox, artefactsAddedListBoxItemsRemoved);
-            AddItemsToListBox(materialsAddedListBox, materialsAddedListBoxItemsRemoved);
+            //AddItemsToListBox(artefactsAddedListBox, artefactsAddedListBoxItemsRemoved);
+            //AddItemsToListBox(materialsAddedListBox, materialsAddedListBoxItemsRemoved);
+            string artefactsAddedSearch = artefactsAddedSearchBox.Text;
+            string materialsAddedSearch = materialsAddedSearchBox.Text;
+            artefactsAddedSearchBox.Text = "";
+            materialsAddedSearchBox.Text = "";
 
             List<artefact> artefactsAdded = new List<artefact>(GetItemsFromListBox<artefact>(artefactsAddedListBox, 1));
             List<listBoxItem> materialsAdded = new List<listBoxItem>(GetItemsFromListBox<listBoxItem>(materialsAddedListBox, 1));
 
-            RemoveListBoxItemsFromListBox(artefactsAddedListBox, artefactsAddedListBoxItemsRemoved);
-            RemoveListBoxItemsFromListBox(materialsAddedListBox, materialsAddedListBoxItemsRemoved);
+            //RemoveListBoxItemsFromListBox(artefactsAddedListBox, artefactsAddedListBoxItemsRemoved);
+            //RemoveListBoxItemsFromListBox(materialsAddedListBox, materialsAddedListBoxItemsRemoved);
+            artefactsAddedSearchBox.Text = artefactsAddedSearch;
+            materialsAddedSearchBox.Text = materialsAddedSearch;
 
             List<listBoxItem> materialsRequired = new List<listBoxItem>(CalculateRequiredMaterials(artefactsAdded, materialsAdded, allMaterials, materialsRequiredListBoxItemsEnough));
             
@@ -671,6 +794,45 @@ namespace ArchHelper2
 
             AddItemsToListBox(materialsRequiredListBox, materialsRequired);
             SortListBoxItems<listBoxItem>(materialsRequiredListBox);
+        }
+
+        public static void GotEnough(listBoxItem rightClickedItem, ListBox materialsListBox, ListBox materialsAddedListBox, TextBox materialSearchBox, TextBox materialsAddedSearchBox)
+        {
+            string materialSearch = materialSearchBox.Text;
+            string materialsAddedSearch = materialsAddedSearchBox.Text;
+
+            materialSearchBox.Text = "";
+            materialsAddedSearchBox.Text = "";
+
+            listBoxItem foundItem = new listBoxItem();
+            bool selected = false;
+            bool foundInAdded = ListBoxContains<listBoxItem>(materialsAddedListBox, rightClickedItem, ref foundItem, ref selected);
+            if (foundInAdded)
+            {
+                materialsAddedListBox.Items.Remove(foundItem);
+                foundItem.ItemAmount += rightClickedItem.ItemAmount;
+                
+                materialsAddedListBox.Items.Add(foundItem);
+                if (selected)
+                {
+                    materialsAddedListBox.SelectedItems.Add(foundItem);
+                }
+            }
+            else if (ListBoxContains<listBoxItem>(materialsListBox, rightClickedItem, ref foundItem, ref selected))
+            {
+                materialsListBox.Items.Remove(foundItem);
+                foundItem.ItemAmount = rightClickedItem.ItemAmount;
+                materialsAddedListBox.Items.Add(foundItem);
+            }
+            else
+            {
+                PopulateDebugConsole("Could not find " + rightClickedItem.ItemName + " in either ListBox");
+            }
+
+            materialSearchBox.Text = materialSearch;
+            materialsAddedSearchBox.Text = materialsAddedSearch;
+
+            SortListBoxItems<listBoxItem>(materialsAddedListBox);
         }
 
         /// <summary>
@@ -748,7 +910,7 @@ namespace ArchHelper2
                 }
             }
 
-            return rightClickedItem;
+           return rightClickedItem;
         }
 
         public static void SelectFolder(ref string path)

@@ -1,2 +1,4 @@
-Add functionality to allow for continious use
--When you close and open the program, it shouldn't look like anything's changed
+Features:
+Add x button to textboxes
+
+Bugs:

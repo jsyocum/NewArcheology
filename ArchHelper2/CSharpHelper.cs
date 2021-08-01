@@ -17,6 +17,7 @@ using static ArchHelper2.DebugConsoleTools;
 using static ArchHelper2.ArchDebugConsoleTools;
 using System.Windows.Input;
 using System.Net;
+using System.Diagnostics;
 
 namespace ArchHelper2
 {
@@ -389,6 +390,14 @@ namespace ArchHelper2
 
             string URL = itemNameConverted.ToString();
             return URL;
+        }
+
+        public static void OpenURL(string URL)
+        {
+            if (URL != null && URL.Length > 0)
+            {
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {URL}") { CreateNoWindow = true });
+            }
         }
 
         public static void Download(string URL, string savePath)

@@ -316,6 +316,8 @@
                     <ContextMenu>
                         <MenuItem Header="Go to wiki"
                                   x:Name="MaterialsRequiredBoxWiki" PreviewMouseLeftButtonDown="MaterialsRequiredBoxWiki_PreviewMouseLeftButtonDown" />
+                        <MenuItem Header="Got enough"
+                                  x:Name="GotEnoughButton" Click="GotEnoughButton_Click" />
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
