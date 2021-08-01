@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using XamlAnimatedGif;
 using System.Windows.Media.Animation;
+using System.Globalization;
 
 namespace ArchHelper2
 {
@@ -81,6 +82,8 @@ namespace ArchHelper2
             }
         }
 
+        //Gif source strings
+        string XButtonSource = "/ArchHelper2;component/Resources/icons8-delete.gif";
 
         //Declaring application folder stuff
         public static TextBox importArtefactsTextBox = new TextBox();
@@ -326,9 +329,6 @@ namespace ArchHelper2
         //LoadButton
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            //Load(QuerySetting("AppPath").Value, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
-            //    materialsAddedButtons, allArtefacts, allMaterials);
-
             Load(defSettings.AppPath, artefactListBox, artefactsAddedListBox, materialListBox, materialsAddedListBox, artefactAddButton, materialAddButton, artefactsAddedButtons,
                 materialsAddedButtons, allArtefacts, allMaterials);
 
@@ -357,6 +357,7 @@ namespace ArchHelper2
         private void ArtefactTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             HideSearchText(ArtefactTextBox, ArtefactTextBlock);
+            HideClearButton(ArtefactTextBox, ArtefactTextBoxClearButton);
             FilterListBoxItems(ArtefactListBox, ArtefactTextBox.Text, artefactListBoxItemsRemoved, artefactListBoxSelectedItemsRemoved);
 
             ToggleButtonsBasedOnListBox(artefactListBox, artefactAddButton);
@@ -370,6 +371,11 @@ namespace ArchHelper2
 
                 ArtefactTextBox.Text = "";
             }
+        }
+
+        private void ArtefactTextBoxClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayGifHideButton(ArtefactTextBoxClearButtonImage, XButtonSource, true, ArtefactTextBoxClearButton, ArtefactTextBox);
         }
 
         //ArtefactListBox
@@ -454,8 +460,16 @@ namespace ArchHelper2
         private void ArtefactRemoveSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             HideSearchText(ArtefactRemoveSearchBox, ArtefactRemoveSearchBlock);
+            HideClearButton(ArtefactRemoveSearchBox, ArtefactRemoveSearchBoxClearButton);
+
             FilterListBoxItems(ArtefactsAddedListBox, ArtefactRemoveSearchBox.Text, artefactAddBoxItemsRemoved, artefactAddBoxSelectedItemsRemoved);
             ToggleButtonsBasedOnListBox(ArtefactsAddedListBox, artefactsAddedButtons);
+        }
+
+        //ArtefactRemoveSearchBoxClearButton
+        private void ArtefactRemoveSearchBoxClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayGifHideButton(ArtefactRemoveSearchBoxClearButtonImage, XButtonSource, true, ArtefactRemoveSearchBoxClearButton, ArtefactRemoveSearchBox);
         }
 
         //ArtefactsAddedListBox
@@ -610,9 +624,16 @@ namespace ArchHelper2
         private void MaterialSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             HideSearchText(MaterialSearchBox, MaterialSearchBlock);
+            HideClearButton(MaterialSearchBox, MaterialSearchBoxClearButton);
+            
             FilterListBoxItems(MaterialListBox, MaterialSearchBox.Text, materialListBoxItemsRemoved, materialListBoxSelectedItemsRemoved);
-
             ToggleButtonsBasedOnListBox(materialListBox, materialAddButton);
+        }
+
+        //MaterialSearchBoxClearButton
+        private void MaterialSearchBoxClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayGifHideButton(MaterialSearchBoxClearButtonImage, XButtonSource, true, MaterialSearchBoxClearButton, MaterialSearchBox);
         }
 
         //MaterialListBox
@@ -695,8 +716,16 @@ namespace ArchHelper2
         private void MaterialRemoveSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             HideSearchText(MaterialRemoveSearchBox, MaterialRemoveSearchBlock);
+            HideClearButton(MaterialRemoveSearchBox, MaterialRemoveSearchBoxClearButton);
+
             FilterListBoxItems(MaterialsAddedListBox, MaterialRemoveSearchBox.Text, materialAddBoxItemsRemoved, materialAddBoxSelectedItemsRemoved);
             ToggleButtonsBasedOnListBox(MaterialsAddedListBox, materialsAddedButtons);
+        }
+
+        //MaterialRemoveSearchBoxClearButton
+        private void MaterialRemoveSearchBoxClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayGifHideButton(MaterialRemoveSearchBoxClearButtonImage, XButtonSource, true, MaterialRemoveSearchBoxClearButton, MaterialRemoveSearchBox);
         }
 
         //MaterialsAddedListBox
@@ -842,7 +871,15 @@ namespace ArchHelper2
         private void MaterialsRequiredSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             HideSearchText(MaterialsRequiredSearchBox, MaterialsRequiredSearchBlock);
+            HideClearButton(MaterialsRequiredSearchBox, MaterialsRequiredSearchBoxClearButton);
+
             FilterListBoxItems(MaterialsRequiredListBox, MaterialsRequiredSearchBox.Text, materialsRequiredListBoxItemsRemoved, null);
+        }
+
+        //MaterialsRequiredSearchBoxClearButton
+        private void MaterialsRequiredSearchBoxClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayGifHideButton(MaterialsRequiredSearchBoxClearButtonImage, XButtonSource, true, MaterialsRequiredSearchBoxClearButton, MaterialsRequiredSearchBox);
         }
 
         //MaterialsRequiredListBox

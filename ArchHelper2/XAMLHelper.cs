@@ -44,6 +44,18 @@ namespace ArchHelper2
             }
         }
 
+        public static void HideClearButton(TextBox textBox, Button clearButton)
+        {
+            if (textBox.Text.Length > 0)
+            {
+                clearButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                clearButton.Visibility = Visibility.Hidden;
+            }
+        }
+
         public static void ClearSearchBoxes()
         {
             artefactTextBox.Text = "";
@@ -1238,6 +1250,27 @@ namespace ArchHelper2
                 Uri uri = new Uri(source, UriKind.RelativeOrAbsolute);
                 AnimationBehavior.SetSourceUri(gif, uri);
                 AnimationBehavior.GetAnimator(gif).Play();
+            }
+        }
+
+        public static async void PlayGifHideButton(Image gif, string source, bool allowInterrupt, Button button, TextBox textBox)
+        {
+            textBox.Text = "";
+            textBox.Focus();
+
+            button.Visibility = Visibility.Visible;
+
+            PlayGif(gif, source, allowInterrupt);
+
+            Animator aGif = AnimationBehavior.GetAnimator(gif);
+            while (aGif.CurrentFrameIndex != aGif.FrameCount - 1)
+            {
+                await Task.Delay(1);
+            }
+
+            if (textBox.Text == "")
+            {
+                button.Visibility = Visibility.Hidden;
             }
         }
 
