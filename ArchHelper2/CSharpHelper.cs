@@ -346,11 +346,14 @@ namespace ArchHelper2
                     {
                         material.ItemAmount -= hadMaterial.ItemAmount;
                     }
+                }
+            }
 
-                    if (material.ItemAmount <= 0)
-                    {
-                        materialsRequiredToRemove.Add(material);
-                    }
+            foreach (listBoxItem material in materialsRequired)
+            {
+                if (material.ItemAmount <= 0)
+                {
+                    materialsRequiredToRemove.Add(material);
                 }
             }
 
